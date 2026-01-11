@@ -17,7 +17,11 @@ class DiaryController {
             exit;
         }
 
-        $entries = $this->diaryModel->getAllByUser($_SESSION['user_id']);
+        $date = $_GET['date'] ?? date('Y-m-d');
+        $search = $_GET['search'] ?? '';
+        $mood = $_GET['mood'] ?? '';
+
+        $entries = $this->diaryModel->getEntriesByDateAndFilters($_SESSION['user_id'], $date, $search, $mood);
         include __DIR__ . '/../views/diary/index.php';
     }
 
@@ -36,10 +40,14 @@ class DiaryController {
     }
 
     private function store() {
+        // Verify CSRF token
+        verifyCSRF();
+
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
         $content = $_POST['content'];
         $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
         $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING) ?: 'font-poppins';
 
         if (!$title || !$content || !$date) {
             $_SESSION['error'] = 'Title, content, and date are required';
@@ -47,7 +55,31 @@ class DiaryController {
             exit;
         }
 
-        $entryId = $this->diaryModel->create($_SESSION['user_id'], $title, $content, $mood, $date);
+        $entryId = $this->diaryModel->create($_SESSION['user_id'], $title, $content, $mood, $date, $fontFamily);
+
+        if (!$entryId) {
+            $_SESSION['error'] = 'Failed to create entry';
+            header('Location: ' . APP_URL . '/diary/create?date=' . $date);
+            exit;
+        }
+
+        // Calculate position for new entry to avoid overlapping
+        $existingEntries = $this->diaryModel->getEntriesByDateAndFilters($_SESSION['user_id'], $date, '', '');
+        $entryCount = count($existingEntries);
+        
+        // Simple grid positioning: 3 cards per row, 100px spacing
+        $cardsPerRow = 3;
+        $spacingX = 280; // card width + margin
+        $spacingY = 320; // card height + margin
+        
+        $row = floor($entryCount / $cardsPerRow);
+        $col = $entryCount % $cardsPerRow;
+        
+        $positionX = $col * $spacingX + 20; // 20px margin from left
+        $positionY = $row * $spacingY + 20; // 20px margin from top
+        
+        // Update the entry with calculated position
+        $this->diaryModel->updatePosition($entryId, $_SESSION['user_id'], $positionX, $positionY, 0, $entryCount);
 
         // Handle image uploads
         if (!empty($_FILES['images']['name'][0])) {
@@ -81,9 +113,13 @@ class DiaryController {
     }
 
     private function update($id) {
+        // Verify CSRF token
+        verifyCSRF();
+
         $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
         $content = $_POST['content'];
         $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
+        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING);
 
         if (!$title || !$content) {
             $_SESSION['error'] = 'Title and content are required';
@@ -91,7 +127,7 @@ class DiaryController {
             exit;
         }
 
-        $this->diaryModel->update($id, $_SESSION['user_id'], $title, $content, $mood);
+        $this->diaryModel->update($id, $_SESSION['user_id'], $title, $content, $mood, $fontFamily);
 
         // Handle image uploads
         if (!empty($_FILES['images']['name'][0])) {
@@ -251,6 +287,36 @@ class DiaryController {
 
             imagedestroy($image);
             imagedestroy($thumbnail);
+        }
+    }
+
+    public function updatePosition() {
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $entryId = $input['entry_id'] ?? null;
+        $positionX = $input['position_x'] ?? 0;
+        $positionY = $input['position_y'] ?? 0;
+        $rotation = $input['rotation'] ?? 0;
+        $zIndex = $input['z_index'] ?? 0;
+
+        if (!$entryId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Entry ID required']);
+            return;
+        }
+
+        $result = $this->diaryModel->updatePosition($entryId, $_SESSION['user_id'], $positionX, $positionY, $rotation, $zIndex);
+
+        if ($result) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to update position']);
         }
     }
 }

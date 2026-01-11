@@ -72,6 +72,15 @@ function matchRoute($request, $routes) {
         if ($method === 'verify-otp') {
             return ['controller' => 'OTPController', 'method' => 'verify'];
         }
+        if ($method === 'submit-mood') {
+            return ['controller' => 'MoodController', 'method' => 'submit'];
+        }
+        if ($method === 'get-today-mood') {
+            return ['controller' => 'MoodController', 'method' => 'getTodayMood'];
+        }
+        if ($method === 'update-position') {
+            return ['controller' => 'DiaryController', 'method' => 'updatePosition'];
+        }
     }
 
     return null;

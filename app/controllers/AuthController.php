@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/OTP.php';
+require_once __DIR__ . '/../models/Mood.php';
 require_once __DIR__ . '/../../config/mail.php';
 
 class AuthController {
     private $userModel;
     private $otpModel;
+    private $moodModel;
 
     public function __construct() {
         if (!class_exists('User')) {
@@ -25,6 +27,16 @@ class AuthController {
                 $this->otpModel = new OTP();
             } catch (Exception $e) {
                 $this->otpModel = null;
+            }
+        }
+
+        if (!class_exists('Mood')) {
+            $this->moodModel = null;
+        } else {
+            try {
+                $this->moodModel = new Mood();
+            } catch (Exception $e) {
+                $this->moodModel = null;
             }
         }
     }
@@ -136,6 +148,12 @@ class AuthController {
 
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
+
+            // Check if user has submitted mood for today
+            if ($this->moodModel && !$this->moodModel->hasSubmittedToday($user['id'])) {
+                $_SESSION['show_mood_checkin'] = true;
+            }
+
             header('Location: ' . APP_URL . '/dashboard');
             exit;
         } else {

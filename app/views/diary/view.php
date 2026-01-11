@@ -32,7 +32,7 @@ include __DIR__ . '/../components/navbar.php';
         <?php endif; ?>
 
         <div class="prose prose-lg max-w-none mb-8">
-            <p class="text-gray-700 leading-relaxed whitespace-pre-line"><?php echo nl2br(htmlspecialchars($entry['content'])); ?></p>
+            <p class="text-gray-700 leading-relaxed whitespace-pre-line <?php echo $entry['font_family'] ?? 'font-poppins'; ?>"><?php echo nl2br(htmlspecialchars($entry['content'])); ?></p>
         </div>
 
         <?php if (!empty($images)): ?>

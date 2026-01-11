@@ -26,20 +26,21 @@ include __DIR__ . '/../components/navbar.php';
                 <select id="mood" name="mood" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset">
                     <option value="">Select mood</option>
                     <option value="Happy" <?php echo $entry['mood'] === 'Happy' ? 'selected' : ''; ?>>😊 Happy</option>
-                    <option value="Sad" <?php echo $entry['mood'] === 'Sad' ? 'selected' : ''; ?>>😢 Sad</option>
-                    <option value="Excited" <?php echo $entry['mood'] === 'Excited' ? 'selected' : ''; ?>>🤩 Excited</option>
-                    <option value="Angry" <?php echo $entry['mood'] === 'Angry' ? 'selected' : ''; ?>>😠 Angry</option>
                     <option value="Calm" <?php echo $entry['mood'] === 'Calm' ? 'selected' : ''; ?>>😌 Calm</option>
+                    <option value="Sad" <?php echo $entry['mood'] === 'Sad' ? 'selected' : ''; ?>>😢 Sad</option>
                     <option value="Anxious" <?php echo $entry['mood'] === 'Anxious' ? 'selected' : ''; ?>>😰 Anxious</option>
-                    <option value="Grateful" <?php echo $entry['mood'] === 'Grateful' ? 'selected' : ''; ?>>🙏 Grateful</option>
+                    <option value="Excited" <?php echo $entry['mood'] === 'Excited' ? 'selected' : ''; ?>>🤩 Excited</option>
                     <option value="Tired" <?php echo $entry['mood'] === 'Tired' ? 'selected' : ''; ?>>😴 Tired</option>
-                    <option value="Confused" <?php echo $entry['mood'] === 'Confused' ? 'selected' : ''; ?>>😕 Confused</option>
+                    <option value="Angry" <?php echo $entry['mood'] === 'Angry' ? 'selected' : ''; ?>>😠 Angry</option>
+                    <option value="Loved" <?php echo $entry['mood'] === 'Loved' ? 'selected' : ''; ?>>🥰 Loved</option>
                 </select>
             </div>
 
+            <?php include __DIR__ . '/../components/font_picker.php'; ?>
+
             <div>
                 <label for="content" class="block text-xs font-medium text-gray-700 mb-2">Content</label>
-                <textarea id="content" name="content" rows="10" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset resize-none"><?php echo htmlspecialchars($entry['content']); ?></textarea>
+                <textarea id="content" name="content" rows="10" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset resize-none <?php echo $entry['font_family'] ?? 'font-poppins'; ?>"><?php echo htmlspecialchars($entry['content']); ?></textarea>
             </div>
 
             <?php if (!empty($images)): ?>

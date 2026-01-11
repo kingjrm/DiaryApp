@@ -26,20 +26,21 @@ include __DIR__ . '/../components/navbar.php';
                 <select id="mood" name="mood" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset">
                     <option value="">Select mood</option>
                     <option value="Happy">😊 Happy</option>
-                    <option value="Sad">😢 Sad</option>
-                    <option value="Excited">🤩 Excited</option>
-                    <option value="Angry">😠 Angry</option>
                     <option value="Calm">😌 Calm</option>
+                    <option value="Sad">😢 Sad</option>
                     <option value="Anxious">😰 Anxious</option>
-                    <option value="Grateful">🙏 Grateful</option>
+                    <option value="Excited">🤩 Excited</option>
                     <option value="Tired">😴 Tired</option>
-                    <option value="Confused">😕 Confused</option>
+                    <option value="Angry">😠 Angry</option>
+                    <option value="Loved">🥰 Loved</option>
                 </select>
             </div>
 
+            <?php include __DIR__ . '/../components/font_picker.php'; ?>
+
             <div>
                 <label for="content" class="block text-xs font-medium text-gray-700 mb-2">Content</label>
-                <textarea id="content" name="content" rows="10" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset resize-none" placeholder="Write your thoughts here..."></textarea>
+                <textarea id="content" name="content" rows="10" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset resize-none font-poppins" placeholder="Write your thoughts here..."></textarea>
                 <div class="text-xs text-gray-500 mt-1">Auto-saved every 30 seconds</div>
             </div>
 
