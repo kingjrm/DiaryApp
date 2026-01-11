@@ -192,6 +192,11 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        /* User menu rotation */
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">

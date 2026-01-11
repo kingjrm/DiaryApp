@@ -97,6 +97,10 @@ CREATE TABLE user_preferences (
     user_id INT NOT NULL UNIQUE,
     writing_font VARCHAR(100) DEFAULT 'Poppins',
     scrapbook_theme VARCHAR(50) DEFAULT 'classic',
+    avatar_path VARCHAR(500),
+    bio TEXT,
+    timezone VARCHAR(50) DEFAULT 'UTC',
+    date_format VARCHAR(20) DEFAULT 'Y-m-d',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

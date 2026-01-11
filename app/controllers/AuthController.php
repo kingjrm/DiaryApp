@@ -211,6 +211,48 @@ class AuthController {
         exit;
     }
 
+    public function profile() {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . APP_URL . '/login');
+            exit;
+        }
+
+        require_once __DIR__ . '/../models/UserPreferences.php';
+        $preferencesModel = new UserPreferences();
+        $userPreferences = $preferencesModel->getPreferences($_SESSION['user_id']);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $bio = trim($_POST['bio'] ?? '');
+            $writingFont = $_POST['writing_font'] ?? 'Poppins';
+            $scrapbookTheme = $_POST['scrapbook_theme'] ?? 'classic';
+            $timezone = $_POST['timezone'] ?? 'UTC';
+            $dateFormat = $_POST['date_format'] ?? 'Y-m-d';
+
+            // Update user name
+            if (!empty($name)) {
+                $this->userModel->updateProfile($_SESSION['user_id'], $name);
+                $_SESSION['user_name'] = $name;
+            }
+
+            // Update preferences
+            $preferencesModel->updatePreferences($_SESSION['user_id'], [
+                'writing_font' => $writingFont,
+                'scrapbook_theme' => $scrapbookTheme,
+                'bio' => $bio,
+                'timezone' => $timezone,
+                'date_format' => $dateFormat
+            ]);
+
+            $_SESSION['success'] = 'Profile updated successfully!';
+            header('Location: ' . APP_URL . '/profile');
+            exit;
+        }
+
+        $user = $this->userModel->findById($_SESSION['user_id']);
+        include __DIR__ . '/../views/auth/profile.php';
+    }
+
     public function resendOTP() {
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . APP_URL . '/login');

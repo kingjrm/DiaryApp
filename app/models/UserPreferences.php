@@ -27,11 +27,15 @@ class UserPreferences {
     public function updatePreferences($userId, $preferences) {
         if (!$this->db) return false;
         try {
-            $stmt = $this->db->prepare("INSERT INTO user_preferences (user_id, writing_font, scrapbook_theme) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE writing_font = VALUES(writing_font), scrapbook_theme = VALUES(scrapbook_theme), updated_at = CURRENT_TIMESTAMP");
+            $stmt = $this->db->prepare("INSERT INTO user_preferences (user_id, writing_font, scrapbook_theme, avatar_path, bio, timezone, date_format) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE writing_font = VALUES(writing_font), scrapbook_theme = VALUES(scrapbook_theme), avatar_path = VALUES(avatar_path), bio = VALUES(bio), timezone = VALUES(timezone), date_format = VALUES(date_format), updated_at = CURRENT_TIMESTAMP");
             return $stmt->execute([
                 $userId,
                 $preferences['writing_font'] ?? 'Poppins',
-                $preferences['scrapbook_theme'] ?? 'classic'
+                $preferences['scrapbook_theme'] ?? 'classic',
+                $preferences['avatar_path'] ?? null,
+                $preferences['bio'] ?? null,
+                $preferences['timezone'] ?? 'UTC',
+                $preferences['date_format'] ?? 'Y-m-d'
             ]);
         } catch (Exception $e) {
             return false;
@@ -41,7 +45,11 @@ class UserPreferences {
     private function getDefaults() {
         return [
             'writing_font' => 'Poppins',
-            'scrapbook_theme' => 'classic'
+            'scrapbook_theme' => 'classic',
+            'avatar_path' => null,
+            'bio' => null,
+            'timezone' => 'UTC',
+            'date_format' => 'Y-m-d'
         ];
     }
 

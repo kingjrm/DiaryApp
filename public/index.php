@@ -20,6 +20,7 @@ $routes = [
     '/diary/create' => ['controller' => 'DiaryController', 'method' => 'create'],
     '/diary/calendar' => ['controller' => 'DiaryController', 'method' => 'calendar'],
     '/diary/search' => ['controller' => 'DiaryController', 'method' => 'search'],
+    '/profile' => ['controller' => 'AuthController', 'method' => 'profile'],
 ];
 
 function matchRoute($request, $routes) {

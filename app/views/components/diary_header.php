@@ -69,6 +69,30 @@ $mood = $_GET['mood'] ?? '';
                     <i class="fas fa-plus mr-2 text-xs"></i>
                     New Entry
                 </button>
+
+                <div class="h-4 w-px bg-gray-300"></div>
+
+                <!-- User Menu -->
+                <div class="relative group">
+                    <div id="user-menu-button" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 cursor-pointer select-none">
+                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                        </div>
+                        <span class="text-sm font-poppins"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200 group-hover:rotate-180" id="user-menu-icon"></i>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-sm border border-gray-200 py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="<?php echo APP_URL; ?>/profile" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-poppins transition-colors duration-200">
+                            <i class="fas fa-user mr-2"></i>Profile Settings
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="<?php echo APP_URL; ?>/auth/logout" class="block px-3 py-2 text-sm text-red-600 hover:bg-red-50 font-poppins transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
