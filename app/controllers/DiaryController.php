@@ -48,6 +48,11 @@ class DiaryController {
         $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
         $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
         $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING) ?: 'font-poppins';
+        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_SANITIZE_STRING) ?: '#ffffff';
+        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_SANITIZE_STRING) ?: '#000000';
+        $textBold = isset($_POST['text_bold']) ? 1 : 0;
+        $textItalic = isset($_POST['text_italic']) ? 1 : 0;
+        $textUnderline = isset($_POST['text_underline']) ? 1 : 0;
 
         if (!$title || !$content || !$date) {
             $_SESSION['error'] = 'Title, content, and date are required';
@@ -55,7 +60,13 @@ class DiaryController {
             exit;
         }
 
-        $entryId = $this->diaryModel->create($_SESSION['user_id'], $title, $content, $mood, $date, $fontFamily);
+        // Handle background image upload
+        $backgroundImage = null;
+        if (!empty($_FILES['background_image']['name'])) {
+            $backgroundImage = $this->handleBackgroundImageUpload();
+        }
+
+        $entryId = $this->diaryModel->create($_SESSION['user_id'], $title, $content, $mood, $date, $fontFamily, 0, 0, 0, 0, $backgroundColor, $backgroundImage, $textColor, $textBold, $textItalic, $textUnderline);
 
         if (!$entryId) {
             $_SESSION['error'] = 'Failed to create entry';
@@ -67,14 +78,17 @@ class DiaryController {
         $existingEntries = $this->diaryModel->getEntriesByDateAndFilters($_SESSION['user_id'], $date, '', '');
         $entryCount = count($existingEntries);
         
-        // Simple grid positioning: 3 cards per row, 100px spacing
-        $cardsPerRow = 3;
-        $spacingX = 280; // card width + margin
-        $spacingY = 320; // card height + margin
-        
+        // Dynamic grid positioning: calculate based on typical screen width
+        // Assuming ~1200px container width, 280px per card (256px card + 24px spacing)
+        $containerWidth = 1200; // approximate container width
+        $cardWidth = 280; // card width + spacing
+        $cardsPerRow = max(1, floor($containerWidth / $cardWidth));
+        $spacingX = $cardWidth;
+        $spacingY = 220; // Reduced spacing for more compact layout
+
         $row = floor($entryCount / $cardsPerRow);
         $col = $entryCount % $cardsPerRow;
-        
+
         $positionX = $col * $spacingX + 20; // 20px margin from left
         $positionY = $row * $spacingY + 20; // 20px margin from top
         
@@ -120,6 +134,11 @@ class DiaryController {
         $content = $_POST['content'];
         $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
         $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING);
+        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_SANITIZE_STRING);
+        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_SANITIZE_STRING);
+        $textBold = isset($_POST['text_bold']) ? 1 : 0;
+        $textItalic = isset($_POST['text_italic']) ? 1 : 0;
+        $textUnderline = isset($_POST['text_underline']) ? 1 : 0;
 
         if (!$title || !$content) {
             $_SESSION['error'] = 'Title and content are required';
@@ -127,7 +146,13 @@ class DiaryController {
             exit;
         }
 
-        $this->diaryModel->update($id, $_SESSION['user_id'], $title, $content, $mood, $fontFamily);
+        // Handle background image upload
+        $backgroundImage = null;
+        if (!empty($_FILES['background_image']['name'])) {
+            $backgroundImage = $this->handleBackgroundImageUpload();
+        }
+
+        $this->diaryModel->update($id, $_SESSION['user_id'], $title, $content, $mood, $fontFamily, $backgroundColor, $backgroundImage, $textColor, $textBold, $textItalic, $textUnderline);
 
         // Handle image uploads
         if (!empty($_FILES['images']['name'][0])) {
@@ -288,6 +313,39 @@ class DiaryController {
             imagedestroy($image);
             imagedestroy($thumbnail);
         }
+    }
+
+    private function handleBackgroundImageUpload() {
+        $uploadDir = UPLOAD_PATH;
+
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+        if ($_FILES['background_image']['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        $originalName = $_FILES['background_image']['name'];
+        $fileSize = $_FILES['background_image']['size'];
+        $fileType = $_FILES['background_image']['type'];
+
+        // Validate file
+        if ($fileSize > MAX_FILE_SIZE) {
+            return null;
+        }
+
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            return null;
+        }
+
+        $filename = 'bg_' . uniqid() . '.' . $ext;
+        $path = $uploadDir . $filename;
+
+        if (move_uploaded_file($_FILES['background_image']['tmp_name'], $path)) {
+            return $filename;
+        }
+
+        return null;
     }
 
     public function updatePosition() {

@@ -8,7 +8,7 @@ include __DIR__ . '/../components/diary_header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <!-- Entries Grid -->
-        <div id="entries-container" class="relative min-h-[600px] <?php echo empty($entries) ? '' : 'move-mode-disabled'; ?>">
+        <div id="entries-container" class="relative min-h-[1000px] <?php echo empty($entries) ? '' : 'move-mode-disabled'; ?>">
 
             <?php if (empty($entries)): ?>
                 <!-- Empty State -->
@@ -33,47 +33,61 @@ include __DIR__ . '/../components/diary_header.php';
                          style="left: <?php echo $entry['position_x']; ?>px; top: <?php echo $entry['position_y']; ?>px; transform: rotate(<?php echo $entry['rotation']; ?>deg); z-index: <?php echo $entry['z_index']; ?>;">
 
                         <!-- Polaroid Card -->
-                        <div class="bg-white rounded-lg shadow-lg border-4 border-white w-64 h-80 relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <div class="bg-white rounded-lg shadow-lg border-4 border-white relative overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-64 min-h-[120px]"
+                             style="background-color: <?php echo htmlspecialchars($entry['background_color'] ?? '#ffffff'); ?>;
+                                    <?php if (!empty($entry['background_image'])): ?>background-image: url('<?php echo APP_URL; ?>/uploads/<?php echo htmlspecialchars($entry['background_image']); ?>'); background-size: cover; background-position: center;<?php endif; ?>">
 
                             <!-- Tape corners -->
-                            <div class="absolute -top-1 -left-1 w-3 h-3 bg-yellow-300 rounded-full shadow-sm"></div>
-                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-pink-300 rounded-full shadow-sm"></div>
-                            <div class="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-300 rounded-full shadow-sm"></div>
-                            <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-300 rounded-full shadow-sm"></div>
+                            <div class="tape-corner absolute -top-1 -left-1 w-3 h-3 bg-yellow-300 rounded-full shadow-sm"></div>
+                            <div class="tape-corner absolute -top-1 -right-1 w-3 h-3 bg-pink-300 rounded-full shadow-sm"></div>
+                            <div class="tape-corner absolute -bottom-1 -left-1 w-3 h-3 bg-blue-300 rounded-full shadow-sm"></div>
+                            <div class="tape-corner absolute -bottom-1 -right-1 w-3 h-3 bg-green-300 rounded-full shadow-sm"></div>
 
                             <!-- Card Content -->
-                            <div class="p-4 h-full flex flex-col">
+                            <div class="p-4 flex flex-col gap-3" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>;">
 
                                 <!-- Header -->
-                                <div class="flex justify-between items-start mb-3">
+                                <div class="flex justify-between items-start">
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-sm font-bold text-gray-800 mb-1 font-poppins leading-tight truncate"><?php echo htmlspecialchars($entry['title']); ?></h3>
-                                        <p class="text-xs text-gray-500 font-poppins"><?php echo date('M j', strtotime($entry['entry_date'])); ?></p>
+                                        <h3 class="text-sm font-bold leading-tight truncate <?php echo ($entry['text_bold'] ?? 0) ? 'font-bold' : 'font-semibold'; ?>"
+                                            style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>;
+                                                   <?php if ($entry['text_underline'] ?? 0): ?>text-decoration: underline;<?php endif; ?>">
+                                            <?php echo htmlspecialchars($entry['title']); ?>
+                                        </h3>
+                                        <p class="text-xs font-poppins" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.7;"><?php echo date('M j', strtotime($entry['entry_date'])); ?></p>
                                     </div>
                                     <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onclick="viewEntry(<?php echo $entry['id']; ?>)" class="text-gray-400 hover:text-pink-500 transition-colors" title="View">
+                                        <button onclick="viewEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="View">
                                             <i class="fas fa-eye text-xs"></i>
                                         </button>
-                                        <button onclick="editEntry(<?php echo $entry['id']; ?>)" class="text-gray-400 hover:text-purple-500 transition-colors" title="Edit">
+                                        <button onclick="editEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Edit">
                                             <i class="fas fa-edit text-xs"></i>
                                         </button>
-                                        <button onclick="deleteEntry(<?php echo $entry['id']; ?>)" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete">
+                                        <button onclick="deleteEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Delete">
                                             <i class="fas fa-trash text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- Content Preview -->
-                                <div class="flex-1 mb-3">
-                                    <p class="text-xs text-gray-700 leading-relaxed font-poppins line-clamp-6 <?php echo $entry['font_family'] ?? 'font-poppins'; ?>">
-                                        <?php echo nl2br(htmlspecialchars(substr($entry['content'], 0, 200))); ?><?php echo strlen($entry['content']) > 200 ? '...' : ''; ?>
+                                <div>
+                                    <p class="text-xs leading-relaxed <?php echo $entry['font_family'] ?? 'font-poppins'; ?> break-words"
+                                       style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>;
+                                              <?php if ($entry['text_bold'] ?? 0): ?>font-weight: bold;<?php endif; ?>
+                                              <?php if ($entry['text_italic'] ?? 0): ?>font-style: italic;<?php endif; ?>
+                                              <?php if ($entry['text_underline'] ?? 0): ?>text-decoration: underline;<?php endif; ?>">
+                                        <?php echo nl2br(htmlspecialchars($entry['content'])); ?>
                                     </p>
                                 </div>
 
                                 <!-- Mood Badge -->
                                 <?php if ($entry['mood']): ?>
                                     <div class="flex justify-center">
-                                        <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 rounded-full text-xs font-medium font-poppins shadow-sm">
+                                        <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full text-xs font-medium shadow-sm"
+                                              style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>;
+                                                     <?php if ($entry['text_bold'] ?? 0): ?>font-weight: bold;<?php endif; ?>
+                                                     <?php if ($entry['text_italic'] ?? 0): ?>font-style: italic;<?php endif; ?>
+                                                     <?php if ($entry['text_underline'] ?? 0): ?>text-decoration: underline;<?php endif; ?>">
                                             <?php
                                             $moodEmojis = [
                                                 'Happy' => '😊',
@@ -103,12 +117,29 @@ include __DIR__ . '/../components/diary_header.php';
 <?php include __DIR__ . '/../components/create_modal.php'; ?>
 
 <script>
-// Move mode functionality
-let moveMode = false;
+// Layout mode functionality
 let draggedElement = null;
 let offsetX = 0;
 let offsetY = 0;
 let maxZIndex = 0;
+
+// Sync with global layoutMode
+Object.defineProperty(window, 'layoutMode', {
+    get: () => layoutMode,
+    set: (value) => {
+        layoutMode = value;
+        const container = document.getElementById('entries-container');
+        if (value) {
+            // Arranged mode
+            container.classList.remove('move-mode-enabled');
+            container.classList.add('move-mode-disabled');
+        } else {
+            // Freeform mode
+            container.classList.remove('move-mode-disabled');
+            container.classList.add('move-mode-enabled');
+        }
+    }
+});
 
 // Initialize max z-index
 document.addEventListener('DOMContentLoaded', function() {
@@ -119,24 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function toggleMoveMode(enabled) {
-    moveMode = enabled;
-    const container = document.getElementById('entries-container');
-
-    if (enabled) {
-        container.classList.remove('move-mode-disabled');
-        container.classList.add('move-mode-enabled');
-        showToast('Move Mode: Drag cards to rearrange your memories', 'info');
-    } else {
-        container.classList.remove('move-mode-enabled');
-        container.classList.add('move-mode-disabled');
-        showToast('Cards locked in place', 'success');
-    }
-}
-
-// Mouse events for dragging
+// Mouse events for dragging (only in freeform mode)
 document.addEventListener('mousedown', function(e) {
-    if (!moveMode) return;
+    if (layoutMode) return; // Disable dragging in arranged mode
 
     const card = e.target.closest('.diary-card');
     if (!card) return;
@@ -155,7 +171,7 @@ document.addEventListener('mousedown', function(e) {
 });
 
 document.addEventListener('mousemove', function(e) {
-    if (!draggedElement || !moveMode) return;
+    if (!draggedElement || layoutMode) return;
 
     const container = document.getElementById('entries-container');
     const containerRect = container.getBoundingClientRect();
@@ -163,10 +179,7 @@ document.addEventListener('mousemove', function(e) {
     let newX = e.clientX - containerRect.left - offsetX;
     let newY = e.clientY - containerRect.top - offsetY;
 
-    // Keep within bounds
-    newX = Math.max(0, Math.min(newX, containerRect.width - draggedElement.offsetWidth));
-    newY = Math.max(0, Math.min(newY, containerRect.height - draggedElement.offsetHeight));
-
+    // Freeform movement - no bounds constraints
     draggedElement.style.left = newX + 'px';
     draggedElement.style.top = newY + 'px';
 });
@@ -187,9 +200,9 @@ document.addEventListener('mouseup', function() {
     draggedElement = null;
 });
 
-// Touch events for mobile
+// Touch events for mobile (only in freeform mode)
 document.addEventListener('touchstart', function(e) {
-    if (!moveMode) return;
+    if (layoutMode) return; // Disable dragging in arranged mode
 
     const card = e.target.closest('.diary-card');
     if (!card) return;
@@ -207,7 +220,7 @@ document.addEventListener('touchstart', function(e) {
 });
 
 document.addEventListener('touchmove', function(e) {
-    if (!draggedElement || !moveMode) return;
+    if (!draggedElement || layoutMode) return;
 
     const touch = e.touches[0];
     const container = document.getElementById('entries-container');
@@ -216,9 +229,7 @@ document.addEventListener('touchmove', function(e) {
     let newX = touch.clientX - containerRect.left - offsetX;
     let newY = touch.clientY - containerRect.top - offsetY;
 
-    newX = Math.max(0, Math.min(newX, containerRect.width - draggedElement.offsetWidth));
-    newY = Math.max(0, Math.min(newY, containerRect.height - draggedElement.offsetHeight));
-
+    // Freeform movement - no bounds constraints
     draggedElement.style.left = newX + 'px';
     draggedElement.style.top = newY + 'px';
 
@@ -239,9 +250,9 @@ document.addEventListener('touchend', function() {
     draggedElement = null;
 });
 
-// Rotation with right-click or long press
+// Rotation with right-click or long press (only in freeform mode)
 document.addEventListener('contextmenu', function(e) {
-    if (!moveMode) return;
+    if (layoutMode) return; // Disable rotation in arranged mode
 
     const card = e.target.closest('.diary-card');
     if (!card) return;
@@ -314,30 +325,29 @@ function deleteEntry(id) {
 }
 
 // Utility functions
-function showToast(message, type = 'info') {
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `fixed top-4 right-4 px-4 py-2 rounded-lg text-sm font-poppins z-50 transform translate-x-full transition-transform duration-300 ${
-        type === 'success' ? 'bg-green-500 text-white' :
-        type === 'error' ? 'bg-red-500 text-white' :
-        'bg-blue-500 text-white'
-    }`;
-    toast.textContent = message;
-
-    document.body.appendChild(toast);
-
-    // Animate in
-    setTimeout(() => {
-        toast.classList.remove('translate-x-full');
-    }, 100);
-
-    // Remove after 3 seconds
-    setTimeout(() => {
-        toast.classList.add('translate-x-full');
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 300);
-    }, 3000);
+function saveCardPosition(entryId, x, y, rotation, zIndex) {
+    fetch('<?php echo APP_URL; ?>/api/update-position', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            entry_id: entryId,
+            position_x: x,
+            position_y: y,
+            rotation: rotation,
+            z_index: zIndex
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error('Failed to save position');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving position:', error);
+    });
 }
 </script>
 
@@ -379,5 +389,56 @@ function showToast(message, type = 'info') {
     animation: modal-appear 0.3s ease-out;
 }
 </style>
+
+<script>
+// Auto-arrange cards in grid on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all cards are rendered
+    setTimeout(() => {
+        if (document.querySelectorAll('.diary-card').length > 0) {
+            arrangeCardsInGrid();
+        }
+    }, 100);
+});
+
+// Grid arrangement function (copied from header for consistency)
+function arrangeCardsInGrid() {
+    const cards = document.querySelectorAll('.diary-card');
+    const container = document.querySelector('.max-w-7xl');
+    const containerWidth = container ? container.offsetWidth : window.innerWidth - 100;
+
+    // Card dimensions (256px width + spacing)
+    const cardWidth = 280; // 256px card + 24px spacing
+    const cardHeight = 200; // More conservative height estimate for variable content
+
+    // Calculate how many cards fit per row
+    const cardsPerRow = Math.max(1, Math.floor(containerWidth / cardWidth));
+    const spacingX = cardWidth;
+    const spacingY = cardHeight;
+    const margin = 20; // margin from edges
+
+    cards.forEach((card, index) => {
+        const row = Math.floor(index / cardsPerRow);
+        const col = index % cardsPerRow;
+
+        const targetX = col * spacingX + margin;
+        const targetY = row * spacingY + margin;
+
+        // Set position without animation initially
+        card.style.left = targetX + 'px';
+        card.style.top = targetY + 'px';
+        card.style.transform = 'rotate(0deg)';
+
+        // Apply clean styling for arranged mode
+        const cardInner = card.querySelector('.bg-white');
+        const tapeCorners = card.querySelectorAll('.tape-corner');
+
+        tapeCorners.forEach(tape => tape.style.display = 'none');
+        cardInner.classList.remove('shadow-lg', 'border-4', 'border-white');
+        cardInner.classList.add('shadow-md', 'border-2', 'border-gray-200');
+        card.style.cursor = 'default';
+    });
+}
+</script>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>

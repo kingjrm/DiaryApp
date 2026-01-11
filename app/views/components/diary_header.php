@@ -52,12 +52,12 @@ $mood = $_GET['mood'] ?? '';
 
             <!-- Right side - Actions -->
             <div class="flex items-center space-x-3">
-                <!-- Move Mode Toggle -->
+                <!-- Layout Mode Toggle -->
                 <div class="flex items-center space-x-2">
-                    <span class="text-xs text-gray-600 font-poppins">Move Mode</span>
+                    <span class="text-xs text-gray-600 font-poppins" id="layout-mode-label">Arranged Mode</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="move-mode-toggle" class="sr-only peer" onchange="toggleMoveMode(this.checked)">
-                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-400 peer-checked:to-purple-500"></div>
+                        <input type="checkbox" id="layout-mode-toggle" class="sr-only peer" checked onchange="toggleLayoutMode(this.checked)">
+                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400 peer-checked:to-pink-500"></div>
                     </label>
                 </div>
 
@@ -75,8 +75,8 @@ $mood = $_GET['mood'] ?? '';
 </div>
 
 <script>
-let moveMode = false;
 let searchTimeout;
+let layoutMode = true;
 
 function changeDate(date) {
     const url = new URL(window.location);
@@ -109,23 +109,142 @@ function filterByMood(mood) {
     window.location.href = url.toString();
 }
 
-function toggleMoveMode(enabled) {
-    moveMode = enabled;
-    const cards = document.querySelectorAll('.diary-card');
-
-    if (enabled) {
-        cards.forEach(card => {
-            card.classList.add('move-mode');
-            card.style.cursor = 'grab';
-        });
-        showToast('Move Mode enabled - drag cards to rearrange', 'info');
-    } else {
-        cards.forEach(card => {
-            card.classList.remove('move-mode');
-            card.style.cursor = 'default';
-        });
-        showToast('Move Mode disabled', 'info');
+function toggleLayoutMode(enabled) {
+    // Update global layout mode
+    if (typeof window.layoutMode !== 'undefined') {
+        window.layoutMode = enabled;
     }
+    layoutMode = enabled;
+    
+    const label = document.getElementById('layout-mode-label');
+    
+    if (enabled) {
+        // Arranged mode: clean grid layout
+        label.textContent = 'Arranged Mode';
+        arrangeCardsInGrid();
+        showToast('Cards arranged in clean grid', 'info');
+    } else {
+        // Freeform mode: allow dragging
+        label.textContent = 'Freeform Mode';
+        enableFreeformMode();
+        showToast('Freeform mode - drag cards anywhere!', 'info');
+    }
+}
+
+function arrangeCardsInGrid() {
+    const cards = document.querySelectorAll('.diary-card');
+    const container = document.querySelector('.max-w-7xl');
+    const containerWidth = container ? container.offsetWidth : window.innerWidth - 100;
+
+    // Card dimensions
+    const cardWidth = 280; // 256px card + 24px spacing
+    const margin = 20; // margin from edges
+
+    // Calculate how many columns fit
+    const numColumns = Math.max(1, Math.floor((containerWidth - margin * 2) / cardWidth));
+    const columnWidth = cardWidth;
+
+    // Initialize column heights
+    const columnHeights = new Array(numColumns).fill(margin);
+
+    cards.forEach((card, index) => {
+        // Temporarily reset position to get natural height
+        const originalLeft = card.style.left;
+        const originalTop = card.style.top;
+        const originalTransform = card.style.transform;
+
+        card.style.left = '0px';
+        card.style.top = '0px';
+        card.style.transform = 'rotate(0deg)';
+
+        // Get actual card height after rendering
+        const cardHeight = card.offsetHeight || 200; // fallback height
+
+        // Restore original position
+        card.style.left = originalLeft;
+        card.style.top = originalTop;
+        card.style.transform = originalTransform;
+
+        // Find the shortest column
+        let shortestColumn = 0;
+        let minHeight = columnHeights[0];
+
+        for (let i = 1; i < numColumns; i++) {
+            if (columnHeights[i] < minHeight) {
+                minHeight = columnHeights[i];
+                shortestColumn = i;
+            }
+        }
+
+        // Position the card
+        const targetX = shortestColumn * columnWidth + margin;
+        const targetY = minHeight;
+
+        // Animate to position
+        card.style.transition = 'all 0.5s ease-out';
+        card.style.left = targetX + 'px';
+        card.style.top = targetY + 'px';
+        card.style.transform = 'rotate(0deg)';
+
+        // Update column height with actual card height
+        columnHeights[shortestColumn] = targetY + cardHeight + 20; // 20px spacing
+
+        // Apply clean styling
+        const cardInner = card.querySelector('.bg-white');
+        const tapeCorners = card.querySelectorAll('.tape-corner');
+
+        tapeCorners.forEach(tape => tape.style.display = 'none');
+        cardInner.classList.remove('shadow-lg', 'border-4', 'border-white');
+        cardInner.classList.add('shadow-md', 'border-2', 'border-gray-200');
+        card.style.cursor = 'default';
+
+        // Save arranged position
+        const entryId = card.dataset.entryId;
+        saveCardPosition(entryId, targetX, targetY, 0, index);
+    });
+}
+
+function enableFreeformMode() {
+    const cards = document.querySelectorAll('.diary-card');
+    
+    cards.forEach(card => {
+        // Remove transitions for immediate response
+        card.style.transition = 'none';
+        
+        // Restore original styling
+        const cardInner = card.querySelector('.bg-white');
+        const tapeCorners = card.querySelectorAll('.tape-corner');
+        
+        tapeCorners.forEach(tape => tape.style.display = 'block');
+        cardInner.classList.remove('shadow-md', 'border-2', 'border-gray-200');
+        cardInner.classList.add('shadow-lg', 'border-4', 'border-white');
+        card.style.cursor = 'grab';
+    });
+}
+
+function saveCardPosition(entryId, x, y, rotation, zIndex) {
+    fetch('<?php echo APP_URL; ?>/api/update-position', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            entry_id: entryId,
+            position_x: x,
+            position_y: y,
+            rotation: rotation,
+            z_index: zIndex
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error('Failed to save position');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving position:', error);
+    });
 }
 
 function openCreateModal() {
