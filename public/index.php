@@ -50,8 +50,12 @@ function matchRoute($request, $routes) {
     }
 
     // Auth routes
-    if (preg_match('#^/auth/(\w+)$#', $request, $matches)) {
+    if (preg_match('#^/auth/(\w+(?:-\w+)*)$#', $request, $matches)) {
         $method = $matches[1];
+        // Convert kebab-case to camelCase: verify-otp -> verifyOTP
+        $parts = explode('-', $method);
+        $method = $parts[0] . implode('', array_map('strtoupper', array_slice($parts, 1)));
+        
         if (in_array($method, ['login', 'register', 'logout', 'verifyOTP', 'resendOTP'])) {
             return ['controller' => 'AuthController', 'method' => $method];
         }

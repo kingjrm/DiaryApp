@@ -38,7 +38,10 @@ A modern, user-friendly Daily Diary Web Application built with HTML, CSS, Tailwi
    - Ensure the `public/uploads` directory is writable
 
 5. **Access the Application**:
-   - Open your browser and go to `http://localhost/DiaryApp/public`
+   - **Login:** `http://localhost/DiaryApp/public/`
+   - **Register:** `http://localhost/DiaryApp/public/register`
+   - **Dashboard:** `http://localhost/DiaryApp/public/dashboard`
+   - **Diary:** `http://localhost/DiaryApp/public/diary`
 
 ## Project Structure
 

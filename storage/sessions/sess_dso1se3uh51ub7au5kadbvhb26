@@ -1,1 +1,1 @@
-csrf_token|s:64:"71c52dd96eae8c32172272e68265f43f9f86dea430380ac116853672d4466baf";user_id|i:1;user_name|s:10:"Admin User";show_mood_checkin|b:1;
+csrf_token|s:64:"71c52dd96eae8c32172272e68265f43f9f86dea430380ac116853672d4466baf";user_id|i:4;user_name|s:10:"Admin User";show_mood_checkin|b:1;

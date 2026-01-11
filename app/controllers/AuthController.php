@@ -95,10 +95,10 @@ class AuthController {
                 if ($mail->sendOTP($email, $otp)) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['success'] = 'Registration successful. Please check your email for OTP.';
-                    header('Location: ' . APP_URL . '/verify-otp');
+                    header('Location: ' . APP_URL . '/auth/verify-otp');
                 } else {
                     $_SESSION['error'] = 'Failed to send OTP. Please try again.';
-                    header('Location: ' . APP_URL . '/register');
+                    header('Location: ' . APP_URL . '/auth/register');
                 }
             } else {
                 $_SESSION['error'] = 'Registration failed';
@@ -165,11 +165,24 @@ class AuthController {
     public function verifyOTP() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Process OTP verification
-            $otp = filter_input(INPUT_POST, 'otp', FILTER_SANITIZE_NUMBER_INT);
+            $otp = '';
 
-            if (!$otp || !isset($_SESSION['user_id'])) {
-                $_SESSION['error'] = 'Invalid request';
-                header('Location: ' . APP_URL . '/verify-otp');
+            // Try to get combined OTP first (from hidden field)
+            if (isset($_POST['otp']) && !empty($_POST['otp'])) {
+                $otp = filter_input(INPUT_POST, 'otp', FILTER_SANITIZE_NUMBER_INT);
+            } else {
+                // Combine individual OTP fields
+                for ($i = 1; $i <= 6; $i++) {
+                    $field = 'otp' . $i;
+                    if (isset($_POST[$field])) {
+                        $otp .= filter_input(INPUT_POST, $field, FILTER_SANITIZE_NUMBER_INT);
+                    }
+                }
+            }
+
+            if (strlen($otp) !== 6 || !isset($_SESSION['user_id'])) {
+                $_SESSION['error'] = 'Please enter the complete 6-digit OTP';
+                header('Location: ' . APP_URL . '/auth/verify-otp');
                 exit;
             }
 
@@ -183,7 +196,7 @@ class AuthController {
                 header('Location: ' . APP_URL . '/dashboard');
             } else {
                 $_SESSION['error'] = 'Invalid or expired OTP';
-                header('Location: ' . APP_URL . '/verify-otp');
+                header('Location: ' . APP_URL . '/auth/verify-otp');
             }
             exit;
         } else {
@@ -213,7 +226,7 @@ class AuthController {
         } else {
             $_SESSION['error'] = 'Failed to resend OTP';
         }
-        header('Location: ' . APP_URL . '/verify-otp');
+        header('Location: ' . APP_URL . '/auth/verify-otp');
         exit;
     }
 }
