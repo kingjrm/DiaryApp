@@ -64,11 +64,11 @@ $mood = $_GET['mood'] ?? '';
                 <div class="h-4 w-px bg-gray-300"></div>
 
                 <!-- New Entry Button -->
-                <button onclick="openCreateModal()"
+                <a href="<?php echo APP_URL; ?>/diary/create"
                         class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center font-poppins text-sm shadow-sm hover:shadow-md transform hover:scale-105">
                     <i class="fas fa-plus mr-2 text-xs"></i>
                     New Entry
-                </button>
+                </a>
 
                 <div class="h-4 w-px bg-gray-300"></div>
 
@@ -271,8 +271,6 @@ function saveCardPosition(entryId, x, y, rotation, zIndex) {
     });
 }
 
-function openCreateModal() {
-    // This will be implemented when we create the modal
-    console.log('Open create modal');
+    });
 }
 </script>

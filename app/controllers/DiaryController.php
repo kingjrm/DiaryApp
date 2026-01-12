@@ -100,7 +100,10 @@ class DiaryController {
             $this->handleImageUploads($entryId);
         }
 
-        $_SESSION['success'] = 'Entry created successfully';
+        // Set success message if not already set by image upload handler
+        if (!isset($_SESSION['success'])) {
+            $_SESSION['success'] = 'Entry created successfully';
+        }
         header('Location: ' . APP_URL . '/diary');
         exit;
     }
@@ -159,7 +162,10 @@ class DiaryController {
             $this->handleImageUploads($id);
         }
 
-        $_SESSION['success'] = 'Entry updated successfully';
+        // Set success message if not already set by image upload handler
+        if (!isset($_SESSION['success'])) {
+            $_SESSION['success'] = 'Entry updated successfully';
+        }
         header('Location: ' . APP_URL . '/diary');
         exit;
     }
@@ -241,23 +247,36 @@ class DiaryController {
     }
 
     private function handleImageUploads($entryId) {
-        $uploadDir = UPLOAD_PATH;
-        $tempDir = TEMP_UPLOAD_PATH;
+        $uploadDir = __DIR__ . '/../../' . UPLOAD_PATH;
+        $tempDir = __DIR__ . '/../../' . TEMP_UPLOAD_PATH;
 
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
         if (!is_dir($tempDir)) mkdir($tempDir, 0755, true);
 
+        $uploadedCount = 0;
         foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-            if ($_FILES['images']['error'][$key] !== UPLOAD_ERR_OK) continue;
+            $error = $_FILES['images']['error'][$key];
+            if ($error !== UPLOAD_ERR_OK) {
+                error_log("Image upload error for file $key: $error");
+                continue;
+            }
 
             $originalName = $_FILES['images']['name'][$key];
             $fileSize = $_FILES['images']['size'][$key];
             $fileType = $_FILES['images']['type'][$key];
 
             // Validate file
-            if ($fileSize > MAX_FILE_SIZE) continue;
+            if ($fileSize > MAX_FILE_SIZE) {
+                error_log("File size too large: $fileSize > " . MAX_FILE_SIZE);
+                $_SESSION['error'] = "File '$originalName' is too large (max 5MB)";
+                continue;
+            }
             $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-            if (!in_array($ext, ALLOWED_EXTENSIONS)) continue;
+            if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+                error_log("Invalid file extension: $ext not in " . implode(',', ALLOWED_EXTENSIONS));
+                $_SESSION['error'] = "File '$originalName' has invalid format (allowed: " . implode(', ', ALLOWED_EXTENSIONS) . ")";
+                continue;
+            }
 
             $filename = uniqid() . '.' . $ext;
             $path = $uploadDir . $filename;
@@ -267,7 +286,15 @@ class DiaryController {
                 // Create thumbnail
                 $this->createThumbnail($path, $thumbnailPath);
                 $this->imageModel->create($entryId, $filename, $originalName, $path, $thumbnailPath);
+                $uploadedCount++;
+            } else {
+                error_log("Failed to move uploaded file to: $path");
+                $_SESSION['error'] = "Failed to save file '$originalName'";
             }
+        }
+
+        if ($uploadedCount > 0 && !isset($_SESSION['error'])) {
+            $_SESSION['success'] = "Entry created successfully with $uploadedCount image(s)";
         }
     }
 
@@ -316,11 +343,12 @@ class DiaryController {
     }
 
     private function handleBackgroundImageUpload() {
-        $uploadDir = UPLOAD_PATH;
+        $uploadDir = __DIR__ . '/../../' . UPLOAD_PATH;
 
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
         if ($_FILES['background_image']['error'] !== UPLOAD_ERR_OK) {
+            error_log("Background image upload error: " . $_FILES['background_image']['error']);
             return null;
         }
 
@@ -330,11 +358,15 @@ class DiaryController {
 
         // Validate file
         if ($fileSize > MAX_FILE_SIZE) {
+            error_log("Background file size too large: $fileSize > " . MAX_FILE_SIZE);
+            $_SESSION['error'] = "Background image '$originalName' is too large (max 5MB)";
             return null;
         }
 
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            error_log("Invalid background file extension: $ext not in " . implode(',', ALLOWED_EXTENSIONS));
+            $_SESSION['error'] = "Background image '$originalName' has invalid format (allowed: " . implode(', ', ALLOWED_EXTENSIONS) . ")";
             return null;
         }
 
@@ -343,9 +375,11 @@ class DiaryController {
 
         if (move_uploaded_file($_FILES['background_image']['tmp_name'], $path)) {
             return $filename;
+        } else {
+            error_log("Failed to move background uploaded file to: $path");
+            $_SESSION['error'] = "Failed to save background image '$originalName'";
+            return null;
         }
-
-        return null;
     }
 
     public function updatePosition() {

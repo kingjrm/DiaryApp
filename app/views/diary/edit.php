@@ -1,7 +1,7 @@
 <?php
 $title = 'Edit Entry';
 include __DIR__ . '/../components/header.php';
-include __DIR__ . '/../components/navbar.php';
+include __DIR__ . '/../components/diary_header.php';
 ?>
 
 <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -331,8 +331,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function handleFiles(files) {
+        // Create a DataTransfer object to update the file input
+        const dt = new DataTransfer();
+        
+        // Add existing files from input
+        if (imageInput.files) {
+            Array.from(imageInput.files).forEach(file => dt.items.add(file));
+        }
+        
         files.forEach(file => {
             if (file.type.startsWith('image/') && file.size <= 5242880) { // 5MB
+                dt.items.add(file);
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const previewDiv = document.createElement('div');
@@ -355,6 +365,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast('Invalid file: ' + file.name + ' (must be image, max 5MB)', 'error');
             }
         });
+        
+        // Update the file input with the new files
+        imageInput.files = dt.files;
     }
 
     window.removeImage = function(button) {
@@ -419,4 +432,5 @@ function deleteImage(imageId) {
 }
 </script>
 
+<?php include __DIR__ . '/../components/create_modal.php'; ?>
 <?php include __DIR__ . '/../components/footer.php'; ?>

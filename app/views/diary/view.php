@@ -1,7 +1,7 @@
 <?php
 $title = htmlspecialchars($entry['title']);
 include __DIR__ . '/../components/header.php';
-include __DIR__ . '/../components/navbar.php';
+include __DIR__ . '/../components/diary_header.php';
 ?>
 
 <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -61,4 +61,5 @@ include __DIR__ . '/../components/navbar.php';
     </div>
 </div>
 
+<?php include __DIR__ . '/../components/create_modal.php'; ?>
 <?php include __DIR__ . '/../components/footer.php'; ?>

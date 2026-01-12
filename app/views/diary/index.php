@@ -19,10 +19,10 @@ include __DIR__ . '/../components/diary_header.php';
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2 font-poppins">No entries for this date</h3>
                         <p class="text-sm text-gray-600 mb-6 font-poppins">Start writing your first memory</p>
-                        <button onclick="openCreateModal()"
-                                class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-poppins shadow-sm hover:shadow-md transform hover:scale-105">
+                        <a href="<?php echo APP_URL; ?>/diary/create"
+                            class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-poppins shadow-sm hover:shadow-md transform hover:scale-105 inline-flex items-center">
                             <i class="fas fa-plus mr-2"></i>Create Your First Entry
-                        </button>
+                        </a>
                     </div>
                 </div>
             <?php else: ?>

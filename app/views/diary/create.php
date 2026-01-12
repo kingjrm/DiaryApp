@@ -274,8 +274,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function handleFiles(files) {
+        // Create a DataTransfer object to update the file input
+        const dt = new DataTransfer();
+        
+        // Add existing files from input
+        if (imageInput.files) {
+            Array.from(imageInput.files).forEach(file => dt.items.add(file));
+        }
+        
         files.forEach(file => {
             if (file.type.startsWith('image/') && file.size <= 5242880) { // 5MB
+                dt.items.add(file);
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const previewDiv = document.createElement('div');
@@ -298,6 +308,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast('Invalid file: ' + file.name + ' (must be image, max 5MB)', 'error');
             }
         });
+        
+        // Update the file input with the new files
+        imageInput.files = dt.files;
     }
 
     window.removeImage = function(button) {
