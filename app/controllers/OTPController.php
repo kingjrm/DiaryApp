@@ -8,14 +8,28 @@ class OTPController {
     private $userModel;
 
     public function __construct() {
-        $this->otpModel = new OTP();
-        $this->userModel = new User();
+        try {
+            $this->otpModel = new OTP();
+        } catch (Exception $e) {
+            $this->otpModel = null;
+        }
+        try {
+            $this->userModel = new User();
+        } catch (Exception $e) {
+            $this->userModel = null;
+        }
     }
 
     public function send() {
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Unauthorized']);
+            exit;
+        }
+
+        if (!$this->userModel || !$this->otpModel) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Database error']);
             exit;
         }
 
@@ -29,11 +43,16 @@ class OTPController {
         $otp = rand(100000, 999999);
         $this->otpModel->create($user['id'], $otp);
 
-        $mail = Mail::getInstance();
-        if ($mail->sendOTP($user['email'], $otp)) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'message' => 'OTP sent successfully']);
-        } else {
+        try {
+            $mail = Mail::getInstance();
+            if ($mail->sendOTP($user['email'], $otp)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'message' => 'OTP sent successfully']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to send OTP']);
+            }
+        } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to send OTP']);
         }
@@ -44,6 +63,12 @@ class OTPController {
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Unauthorized']);
+            exit;
+        }
+
+        if (!$this->otpModel || !$this->userModel) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Database error']);
             exit;
         }
 

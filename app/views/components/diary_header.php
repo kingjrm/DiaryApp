@@ -270,7 +270,4 @@ function saveCardPosition(entryId, x, y, rotation, zIndex) {
         console.error('Error saving position:', error);
     });
 }
-
-    });
-}
 </script>

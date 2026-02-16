@@ -7,12 +7,26 @@ class DiaryController {
     private $imageModel;
 
     public function __construct() {
-        $this->diaryModel = new Diary();
-        $this->imageModel = new Image();
+        try {
+            $this->diaryModel = new Diary();
+        } catch (Exception $e) {
+            $this->diaryModel = null;
+        }
+        try {
+            $this->imageModel = new Image();
+        } catch (Exception $e) {
+            $this->imageModel = null;
+        }
     }
 
     public function index() {
         if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . APP_URL . '/login');
+            exit;
+        }
+
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
             header('Location: ' . APP_URL . '/login');
             exit;
         }
@@ -40,6 +54,12 @@ class DiaryController {
     }
 
     private function store() {
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary/create');
+            exit;
+        }
+
         // Verify CSRF token
         verifyCSRF();
 
@@ -114,6 +134,12 @@ class DiaryController {
             exit;
         }
 
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
+            exit;
+        }
+
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
@@ -124,12 +150,18 @@ class DiaryController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->update($id);
         } else {
-            $images = $this->imageModel->getByDiaryId($id);
+            $images = $this->imageModel ? $this->imageModel->getByDiaryId($id) : [];
             include __DIR__ . '/../views/diary/edit.php';
         }
     }
 
     private function update($id) {
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
+            exit;
+        }
+
         // Verify CSRF token
         verifyCSRF();
 
@@ -176,6 +208,12 @@ class DiaryController {
             exit;
         }
 
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
+            exit;
+        }
+
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
@@ -184,14 +222,16 @@ class DiaryController {
         }
 
         // Delete images
-        $images = $this->imageModel->getByDiaryId($id);
+        $images = $this->imageModel ? $this->imageModel->getByDiaryId($id) : [];
         foreach ($images as $image) {
             unlink($image['path']);
             if ($image['thumbnail_path']) {
                 unlink($image['thumbnail_path']);
             }
         }
-        $this->imageModel->deleteByDiaryId($id);
+        if ($this->imageModel) {
+            $this->imageModel->deleteByDiaryId($id);
+        }
 
         $this->diaryModel->delete($id, $_SESSION['user_id']);
         $_SESSION['success'] = 'Entry deleted successfully';
@@ -205,6 +245,12 @@ class DiaryController {
             exit;
         }
 
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
+            exit;
+        }
+
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
@@ -212,13 +258,19 @@ class DiaryController {
             exit;
         }
 
-        $images = $this->imageModel->getByDiaryId($id);
+        $images = $this->imageModel ? $this->imageModel->getByDiaryId($id) : [];
         include __DIR__ . '/../views/diary/view.php';
     }
 
     public function search() {
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . APP_URL . '/login');
+            exit;
+        }
+
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
             exit;
         }
 
@@ -234,6 +286,12 @@ class DiaryController {
     public function calendar() {
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . APP_URL . '/login');
+            exit;
+        }
+
+        if (!$this->diaryModel) {
+            $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+            header('Location: ' . APP_URL . '/diary');
             exit;
         }
 
@@ -386,6 +444,12 @@ class DiaryController {
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        if (!$this->diaryModel) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Database error']);
             return;
         }
 

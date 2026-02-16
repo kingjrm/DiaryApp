@@ -22,6 +22,10 @@ function loadEnv($path) {
 
 loadEnv(__DIR__ . '/../.env');
 
+// Enable error reporting in development
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Define constants
 define('APP_URL', getenv('APP_URL'));
 define('APP_SECRET', getenv('APP_SECRET'));

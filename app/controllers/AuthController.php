@@ -89,16 +89,25 @@ class AuthController {
             if ($this->userModel->create($email, $password, $name)) {
                 $user = $this->userModel->findByEmail($email);
                 $otp = rand(100000, 999999);
-                $this->otpModel->create($user['id'], $otp);
-
-                $mail = Mail::getInstance();
-                if ($mail->sendOTP($email, $otp)) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['success'] = 'Registration successful. Please check your email for OTP.';
-                    header('Location: ' . APP_URL . '/auth/verify-otp');
+                if ($this->otpModel) {
+                    $this->otpModel->create($user['id'], $otp);
+                    try {
+                        $mail = Mail::getInstance();
+                        if ($mail->sendOTP($email, $otp)) {
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['success'] = 'Registration successful. Please check your email for OTP.';
+                            header('Location: ' . APP_URL . '/auth/verify-otp');
+                        } else {
+                            $_SESSION['error'] = 'Failed to send OTP. Please try again.';
+                            header('Location: ' . APP_URL . '/auth/register');
+                        }
+                    } catch (Exception $e) {
+                        $_SESSION['error'] = 'Failed to send OTP. Please check email configuration.';
+                        header('Location: ' . APP_URL . '/auth/register');
+                    }
                 } else {
-                    $_SESSION['error'] = 'Failed to send OTP. Please try again.';
-                    header('Location: ' . APP_URL . '/auth/register');
+                    $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+                    header('Location: ' . APP_URL . '/register');
                 }
             } else {
                 $_SESSION['error'] = 'Registration failed';
@@ -138,10 +147,18 @@ class AuthController {
             if (!$user['is_verified']) {
                 $_SESSION['user_id'] = $user['id'];
                 $otp = rand(100000, 999999);
-                $this->otpModel->create($user['id'], $otp);
-                $mail = Mail::getInstance();
-                $mail->sendOTP($email, $otp);
-                $_SESSION['success'] = 'Please verify your account. OTP sent to your email.';
+                if ($this->otpModel) {
+                    $this->otpModel->create($user['id'], $otp);
+                    try {
+                        $mail = Mail::getInstance();
+                        $mail->sendOTP($email, $otp);
+                        $_SESSION['success'] = 'Please verify your account. OTP sent to your email.';
+                    } catch (Exception $e) {
+                        $_SESSION['error'] = 'Failed to send OTP. Please try again.';
+                    }
+                } else {
+                    $_SESSION['error'] = 'Database configuration error. Please check your setup.';
+                }
                 header('Location: ' . APP_URL . '/verify-otp');
                 exit;
             }
@@ -182,6 +199,12 @@ class AuthController {
 
             if (strlen($otp) !== 6 || !isset($_SESSION['user_id'])) {
                 $_SESSION['error'] = 'Please enter the complete 6-digit OTP';
+                header('Location: ' . APP_URL . '/auth/verify-otp');
+                exit;
+            }
+
+            if (!$this->otpModel || !$this->userModel) {
+                $_SESSION['error'] = 'Database configuration error. Please check your setup.';
                 header('Location: ' . APP_URL . '/auth/verify-otp');
                 exit;
             }
