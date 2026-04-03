@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account Preferences</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    margin-bottom: 5px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .card h3 {
+    margin-bottom: 15px;
+  }
+
+  .field {
+    margin-bottom: 15px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  .field select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .summary span {
+    background: #eef3ff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .theme-options {
+    display: flex;
+    gap: 10px;
+  }
+
+  .theme-box {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .theme-box.active {
+    border-color: #4a90e2;
+  }
+
+  .toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .toggle input {
+    width: 40px;
+    height: 20px;
+  }
+
+  .save {
+    text-align: right;
+    margin-top: 15px;
+    color: green;
+    font-size: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Account Preferences</h1>
+  <p>Manage your account settings and customize your experience.</p>
+
+  <!-- Summary -->
+  <div class="card">
+    <h3>Preferences Summary</h3>
+    <div class="summary">
+      <span>🌐 English</span>
+      <span>💱 PHP</span>
+      <span>🕒 GMT+8</span>
+      <span>🌙 Dark Mode</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT SIDE -->
+    <div>
+      <div class="card">
+        <h3>General Preferences</h3>
+
+        <div class="field">
+          <label>Language</label>
+          <select>
+            <option>English</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Currency</label>
+          <select>
+            <option>Philippine Peso (₱)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Timezone</label>
+          <select>
+            <option>GMT+8 - Manila</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Regional Settings</h3>
+
+        <div class="field">
+          <label>Date Format</label>
+          <select>
+            <option>MM/DD/YYYY</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Number Format</label>
+          <select>
+            <option>1,234.56</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div>
+
+      <div class="card">
+        <h3>Interface Theme</h3>
+        <div class="theme-options">
+          <div class="theme-box">Light</div>
+          <div class="theme-box active">Dark</div>
+          <div class="theme-box">Auto</div>
+        </div>
+        <p style="font-size:13px;color:#777;margin-top:10px;">
+          Automatically saves your preference.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Notifications</h3>
+
+        <div class="toggle">
+          <span>Email Notifications</span>
+          <input type="checkbox" checked>
+        </div>
+
+        <div class="toggle">
+          <span>Order Updates</span>
+          <input type="checkbox" checked>
+        </div>
+
+        <div class="toggle">
+          <span>Promotions</span>
+          <input type="checkbox">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Mini Preview</h3>
+        <p style="font-size:13px;color:#777;">
+          Preview how your dashboard will look with selected settings.
+        </p>
+        <div style="height:120px;background:#eef2f7;border-radius:8px;"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="save">✔ Changes saved automatically</div>
+
+</div>
+
+</body>
+</html>

@@ -135,6 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
+        // Set the hidden otp field
+        document.getElementById('otp').value = otp;
+
         // Disable the button to prevent double submission
         verifyBtn.disabled = true;
         verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';

@@ -6,19 +6,19 @@
                         <i class="fas fa-book-open mr-1 text-sm"></i>Diary App
                     </a>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="<?php echo APP_URL; ?>/diary" class="text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                <div class="flex items-center space-x-6">
+                    <a href="<?php echo APP_URL; ?>/diary" class="px-3 py-2 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
                         <i class="fas fa-list mr-1 text-xs"></i>Entries
                     </a>
-                    <a href="<?php echo APP_URL; ?>/diary/calendar" class="text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                    <a href="<?php echo APP_URL; ?>/diary/calendar" class="px-3 py-2 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
                         <i class="fas fa-calendar mr-1 text-xs"></i>Calendar
                     </a>
-                    <a href="<?php echo APP_URL; ?>/diary/search" class="text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                    <a href="<?php echo APP_URL; ?>/diary/search" class="px-3 py-2 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
                         <i class="fas fa-search mr-1 text-xs"></i>Search
                     </a>
                     <div class="relative">
-                        <button id="user-menu-button" class="flex items-center text-sm text-gray-700 hover:text-indigo-600 transition-colors">
-                            <i class="fas fa-user-circle mr-1 text-xs"></i><?php echo $_SESSION['user_name']; ?>
+                        <button id="user-menu-button" class="px-3 py-2 flex items-center text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                            <i class="fas fa-user-circle mr-1 text-xs"></i><?php echo $_SESSION['user_name'] ?? 'User'; ?>
                             <i class="fas fa-chevron-down ml-1 text-xs"></i>
                         </button>
                         <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">

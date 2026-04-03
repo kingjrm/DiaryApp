@@ -18,7 +18,7 @@ class OTP {
             // Delete existing OTPs for this user
             $this->deleteByUserId($userId);
 
-            $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+            $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
             $stmt = $this->db->prepare("INSERT INTO otps (user_id, otp, expires_at) VALUES (?, ?, ?)");
             return $stmt->execute([$userId, $otp, $expiresAt]);
         } catch (Exception $e) {
@@ -30,7 +30,7 @@ class OTP {
         if (!$this->db) return false;
         try {
             $stmt = $this->db->prepare("SELECT * FROM otps WHERE user_id = ? AND otp = ? AND expires_at > NOW() AND used = 0");
-            $stmt->execute([$userId, $otp]);
+            $stmt->execute([$userId, (int)$otp]);
             $result = $stmt->fetch();
 
             if ($result) {
