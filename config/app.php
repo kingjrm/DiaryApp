@@ -37,7 +37,8 @@ define('SESSION_LIFETIME', getenv('SESSION_LIFETIME'));
 
 // Start session
 ini_set('session.save_path', __DIR__ . '/../storage/sessions');
-session_set_cookie_params(3600, '/DiaryApp/');
+// Use root path for session cookie so it's valid across any subpath
+session_set_cookie_params(3600, '/');
 session_start();
 
 // CSRF Protection

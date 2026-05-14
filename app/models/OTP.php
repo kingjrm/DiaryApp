@@ -29,8 +29,9 @@ class OTP {
     public function verify($userId, $otp) {
         if (!$this->db) return false;
         try {
-            $stmt = $this->db->prepare("SELECT * FROM otps WHERE user_id = ? AND otp = ? AND expires_at > NOW() AND used = 0");
-            $stmt->execute([$userId, (int)$otp]);
+            $stmt = $this->db->prepare("SELECT * FROM otps WHERE user_id = ? AND otp = ? AND expires_at > NOW() AND used = 0 LIMIT 1");
+            // Use string comparison for OTP to preserve leading zeros (if any)
+            $stmt->execute([$userId, (string)$otp]);
             $result = $stmt->fetch();
 
             if ($result) {
