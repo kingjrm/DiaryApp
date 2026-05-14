@@ -181,7 +181,7 @@ class AuthController {
                 $_SESSION['show_mood_checkin'] = true;
             }
 
-            header('Location: ' . APP_URL . '/dashboard');
+            header('Location: ' . url('diary'));
             exit;
         } else {
             // Show login form

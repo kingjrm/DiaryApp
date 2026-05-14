@@ -52,24 +52,17 @@
         }
 
         .logo {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: white;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            letter-spacing: -0.5px;
-            transition: color 0.3s ease;
+            cursor: pointer;
+            transition: filter 0.3s ease;
         }
 
-        .navbar.scrolled .logo {
-            color: #a855f7;
-        }
-            white-space: nowrap;
-        }
-
-        .logo span {
-            display: inline;
+        .logo img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
         }
 
         .nav-center {
@@ -238,6 +231,33 @@
             padding: 0 2rem;
             padding-top: 100px;
         }
+        .floating-note {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%) rotate(4deg);
+            width: min(22vw, 260px);
+            max-width: 260px;
+            z-index: 20;
+            pointer-events: none;
+            filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.28));
+            animation: noteFloat 4.5s ease-in-out infinite;
+        }
+        
+        .floating-note img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        @keyframes noteFloat {
+            0%, 100% {
+                transform: translateY(-50%) rotate(4deg) translateX(0);
+            }
+            50% {
+                transform: translateY(-56%) rotate(2deg) translateX(-8px);
+            }
+        }
 
         @keyframes fadeInDown {
             from {
@@ -326,9 +346,17 @@
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
             display: block;
+            line-height: 1;
+        }
+
+        .feature-icon svg {
+            width: 1.4em;
+            height: 1.4em;
+            display: block;
+            margin: 0 auto;
         }
 
         .feature-card h3 {
@@ -574,6 +602,9 @@
             .features {
                 grid-template-columns: 1fr;
             }
+            .floating-note {
+                display: none;
+            }
 
             .info-section h2 {
                 font-size: 2rem;
@@ -585,8 +616,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
-            <span>📔</span>
-            <span>DiaryApp</span>
+            <img src="logomydiary.png" alt="DiaryApp" id="navLogo">
         </div>
         <div class="nav-center">
             <a href="#" onclick="location.reload(); return false;">Home Page</a>
@@ -615,6 +645,9 @@
             <source src="http://localhost/DiaryApp/adventure_mydiary.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="floating-note" aria-hidden="true">
+            <img src="MyDiaryNOTES.png" alt="">
+        </div>
         <div class="hero-content">
             <h1>Your Life, Your Adventure</h1>
             <p class="hero-subtitle">Capture every moment, express every emotion, and build a lasting record of your journey</p>
@@ -652,7 +685,7 @@
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Distraction-Free Writing</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Distraction-Free Writing</h3>
                 <p>Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.</p>
             </div>
 
@@ -672,12 +705,12 @@
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Powerful Search</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Powerful Search</h3>
                 <p>Find any entry instantly. Search by date, mood, keywords, or browse chronologically.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke="currentColor" stroke-width="2" fill="none"/></svg> Mobile Ready</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke="currentColor" stroke-width="2" fill="none"/></svg> Mobile Ready</h3>
                 <p>Write on the go. Our mobile-responsive design works perfectly on all devices.</p>
             </div>
         </div>
@@ -689,32 +722,32 @@
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> End-to-End Encryption</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> End-to-End Encryption</h3>
                 <p>Your diary entries are encrypted with military-grade security. Only you can access your data.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure Servers</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure Servers</h3>
                 <p>We use industry-leading security practices to protect your personal information and ensure data integrity.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Password Protection</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Password Protection</h3>
                 <p>Your account is protected by encrypted passwords. Two-factor authentication available for added security.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16M4 12h16M4 17h16M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Privacy Policy</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16M4 12h16M4 17h16M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Privacy Policy</h3>
                 <p>Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regular Audits</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regular Audits</h3>
                 <p>Security audits and updates ensure your data remains protected against evolving threats.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16.13v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5M11.5 3.5L4 11m9.5-7.5L20 11M12 4v9"/></svg> Secure Backups</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16.13v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5M11.5 3.5L4 11m9.5-7.5L20 11M12 4v9"/></svg> Secure Backups</h3>
                 <p>Your entries are automatically backed up securely so you never lose your memories.</p>
             </div>
         </div>
@@ -726,32 +759,32 @@
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 24/7 Chat Support</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 24/7 Chat Support</h3>
                 <p>Get help anytime. Our support team is available round the clock via live chat to assist you.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg> Email Support</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg> Email Support</h3>
                 <p>Send us an email and our team will respond within 24 hours with solutions and assistance.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6.5a2.5 2.5 0 0 1-2.5-2.5V4z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Knowledge Base</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6.5a2.5 2.5 0 0 1-2.5-2.5V4z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Knowledge Base</h3>
                 <p>Access our comprehensive help documentation with guides, tutorials, and FAQs.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Video Tutorials</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Video Tutorials</h3>
                 <p>Learn how to use DiaryApp with our video tutorials covering all features and use cases.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m6-3l-4.24 4.24M1 12h6m-3 6l4.24-4.24M23 12h-6m3 6l-4.24-4.24M12 17v6M12 1a5 5 0 0 0-5 5M12 1a5 5 0 0 1 5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg> Bug Reports</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m6-3l-4.24 4.24M1 12h6m-3 6l4.24-4.24M23 12h-6m3 6l-4.24-4.24M12 17v6M12 1a5 5 0 0 0-5 5M12 1a5 5 0 0 1 5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg> Bug Reports</h3>
                 <p>Found an issue? Report bugs directly to our team and we'll prioritize fixes for you.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg class="inline w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg> Feature Requests</h3>
+                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg> Feature Requests</h3>
                 <p>Your feedback matters! Suggest new features and vote on others to shape DiaryApp's future.</p>
             </div>
         </div>
@@ -1073,14 +1106,17 @@
             // Navbar background change on scroll
             const navbar = document.querySelector('.navbar');
             const heroSection = document.querySelector('.hero');
+            const navLogo = document.getElementById('navLogo');
             
-            if (navbar && heroSection) {
+            if (navbar && heroSection && navLogo) {
                 window.addEventListener('scroll', function() {
                     const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
                     if (window.scrollY >= heroBottom) {
                         navbar.classList.add('scrolled');
+                        navLogo.src = 'logomydiaryDARK.png';
                     } else {
                         navbar.classList.remove('scrolled');
+                        navLogo.src = 'logomydiary.png';
                     }
                 });
             }
