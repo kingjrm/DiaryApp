@@ -15,13 +15,18 @@ include __DIR__ . '/../components/diary_header.php';
                 <div class="flex items-center justify-center min-h-[400px]">
                     <div class="text-center">
                         <div class="w-24 h-24 bg-gradient-to-br from-pink-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                            <i class="fas fa-book-open text-3xl text-pink-400"></i>
+                            <svg class="w-8 h-8 text-pink-400" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4 6h16v2H4V6zm0 4h16v8H4v-8zm0 10h16v2H4v-2z"/>
+                                <path d="M6 8v6M10 8v6M14 8v6M18 8v6"/>
+                            </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2 font-poppins">No entries for this date</h3>
                         <p class="text-sm text-gray-600 mb-6 font-poppins">Start writing your first memory</p>
                         <a href="<?php echo APP_URL; ?>/diary/create"
                             class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-poppins shadow-sm hover:shadow-md transform hover:scale-105 inline-flex items-center">
-                            <i class="fas fa-plus mr-2"></i>Create Your First Entry
+                            <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>Create Your First Entry
                         </a>
                     </div>
                 </div>
@@ -58,13 +63,19 @@ include __DIR__ . '/../components/diary_header.php';
                                     </div>
                                     <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button onclick="viewEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="View">
-                                            <i class="fas fa-eye text-xs"></i>
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                            </svg>
                                         </button>
                                         <button onclick="editEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Edit">
-                                            <i class="fas fa-edit text-xs"></i>
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                            </svg>
                                         </button>
                                         <button onclick="deleteEntry(<?php echo $entry['id']; ?>)" class="transition-colors" style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>; opacity: 0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'" title="Delete">
-                                            <i class="fas fa-trash text-xs"></i>
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
