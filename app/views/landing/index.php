@@ -24,6 +24,7 @@
             line-height: 1.6;
             color: #1a1a1a;
             background: #ffffff;
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -32,26 +33,38 @@
 
         /* Navigation */
         .navbar {
-            background: white;
+            background: transparent;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            box-shadow: none;
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .logo {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #a855f7;
+            color: white;
             display: flex;
             align-items: center;
             gap: 0.3rem;
             letter-spacing: -0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar.scrolled .logo {
+            color: #a855f7;
+        }
             white-space: nowrap;
         }
 
@@ -68,13 +81,17 @@
         }
 
         .nav-center a {
-            color: #333;
+            color: white;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.85rem;
             transition: color 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+        }
+
+        .navbar.scrolled .nav-center a {
+            color: #333;
         }
 
         .nav-center a:hover {
@@ -88,7 +105,7 @@
         }
 
         .nav-right a {
-            color: #333;
+            color: white;
             text-decoration: none;
             font-weight: 500;
             font-size: 0.85rem;
@@ -98,6 +115,10 @@
             gap: 0.3rem;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+        }
+
+        .navbar.scrolled .nav-right a {
+            color: #333;
         }
 
         .nav-right a:hover {
@@ -326,6 +347,7 @@
             padding: 5rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            scroll-margin-top: 80px;
         }
 
         .info-section h2 {
@@ -460,7 +482,7 @@
             <a href="#support">Support</a>
         </div>
         <div class="nav-right">
-            <a href="<?php echo url('login'); ?>">🔒 Login</a>
+            <a href="<?php echo url('login'); ?>">Login</a>
             <div class="lang-dropdown">
                 <button class="lang-btn" id="langBtn">EN ▼</button>
                 <div class="lang-menu" id="langMenu">
@@ -476,6 +498,10 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <video autoplay muted loop class="hero-video">
+            <source src="<?php echo str_replace('index.php', '', getenv('APP_URL')); ?>adventure_mydiary.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
         <div class="hero-content">
             <h1>Your Life, Your Adventure</h1>
             <p class="hero-subtitle">Capture every moment, express every emotion, and build a lasting record of your journey</p>
@@ -508,8 +534,8 @@
     </section>
 
     <!-- Additional Features -->
-    <section class="info-section">
-        <h2>Why DiaryApp?</h2>
+    <section class="info-section" id="features">
+        <h2>Features</h2>
         
         <div class="features-grid">
             <div class="feature-full">
@@ -540,6 +566,80 @@
             <div class="feature-full">
                 <h3>📱 Mobile Ready</h3>
                 <p>Write on the go. Our mobile-responsive design works perfectly on all devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="info-section" id="security">
+        <h2>Security</h2>
+        
+        <div class="features-grid">
+            <div class="feature-full">
+                <h3>🔒 End-to-End Encryption</h3>
+                <p>Your diary entries are encrypted with military-grade security. Only you can access your data.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>🛡️ Secure Servers</h3>
+                <p>We use industry-leading security practices to protect your personal information and ensure data integrity.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>🔐 Password Protection</h3>
+                <p>Your account is protected by encrypted passwords. Two-factor authentication available for added security.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>📋 Privacy Policy</h3>
+                <p>Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>✅ Regular Audits</h3>
+                <p>Security audits and updates ensure your data remains protected against evolving threats.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>🚀 Secure Backups</h3>
+                <p>Your entries are automatically backed up securely so you never lose your memories.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="info-section" id="support">
+        <h2>Support</h2>
+        
+        <div class="features-grid">
+            <div class="feature-full">
+                <h3>💬 24/7 Chat Support</h3>
+                <p>Get help anytime. Our support team is available round the clock via live chat to assist you.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>📧 Email Support</h3>
+                <p>Send us an email and our team will respond within 24 hours with solutions and assistance.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>📚 Knowledge Base</h3>
+                <p>Access our comprehensive help documentation with guides, tutorials, and FAQs.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>🎓 Video Tutorials</h3>
+                <p>Learn how to use DiaryApp with our video tutorials covering all features and use cases.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>🐛 Bug Reports</h3>
+                <p>Found an issue? Report bugs directly to our team and we'll prioritize fixes for you.</p>
+            </div>
+
+            <div class="feature-full">
+                <h3>💡 Feature Requests</h3>
+                <p>Your feedback matters! Suggest new features and vote on others to shape DiaryApp's future.</p>
             </div>
         </div>
     </section>
@@ -625,6 +725,22 @@
                     langBtn.textContent = langNames[savedLang] + ' ▼';
                 }
             }
+
+            // Smooth scroll for navigation links
+            const navLinks = document.querySelectorAll('.nav-center a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
         });
     </script>
 </body>
