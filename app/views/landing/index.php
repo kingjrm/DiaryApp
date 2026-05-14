@@ -141,7 +141,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #333;
+            color: white;
             font-weight: 500;
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -151,6 +151,10 @@
             align-items: center;
             gap: 0.3rem;
             transition: color 0.2s;
+        }
+
+        .navbar.scrolled .lang-btn {
+            color: #333;
         }
 
         .lang-btn:hover {
@@ -203,7 +207,6 @@
             color: white;
             position: relative;
             overflow: hidden;
-            margin-top: 70px;
         }
 
         .hero::before {
@@ -233,6 +236,7 @@
             z-index: 2;
             animation: fadeInDown 1s ease-out;
             padding: 0 2rem;
+            padding-top: 100px;
         }
 
         @keyframes fadeInDown {
@@ -385,41 +389,150 @@
 
         /* CTA Section */
         .cta-section {
-            background: #1a1a1a;
-            color: white;
-            padding: 5rem 2rem;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            padding: 6rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(168, 85, 247, 0.05);
+            border-radius: 50%;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: rgba(168, 85, 247, 0.03);
+            border-radius: 50%;
+        }
+
+        .cta-icon {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .cta-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: #a855f7;
         }
 
         .cta-section h2 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .cta-section p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 1.15rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            line-height: 1.6;
         }
 
         /* Footer */
         footer {
-            background: #f8f8f8;
-            border-top: 1px solid #e0e0e0;
-            padding: 3rem 2rem;
-            text-align: center;
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            border-top: 1px solid #333;
+            color: white;
+            padding: 5rem 2rem 2rem;
         }
 
         .footer-content {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 0 auto 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #a855f7;
+            font-weight: 700;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .footer-section ul li a:hover {
+            color: #a855f7;
+        }
+
+        .footer-section p {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1.2rem;
+        }
+
+        .footer-social a svg {
+            width: 20px;
+            height: 20px;
+            fill: #a855f7;
+        }
+
+        .footer-social a:hover {
+            background: #a855f7;
+            color: white;
+        }
+
+        .footer-social a:hover svg {
+            fill: white;
         }
 
         .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            text-align: center;
             color: #999;
             font-size: 0.9rem;
         }
@@ -499,7 +612,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <video autoplay muted loop class="hero-video">
-            <source src="<?php echo str_replace('index.php', '', getenv('APP_URL')); ?>adventure_mydiary.mp4" type="video/mp4">
+            <source src="http://localhost/DiaryApp/adventure_mydiary.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="hero-content">
@@ -646,23 +759,237 @@
 
     <!-- CTA Section -->
     <section class="cta-section">
-        <h2>Ready to Start?</h2>
-        <p>Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started.</p>
-        <div style="margin-top: 2rem;">
-            <a href="<?php echo url('register'); ?>" class="btn btn-primary">Create Your Account</a>
+        <div class="cta-content">
+            <div class="cta-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+            </div>
+            <h2>Ready to Start Your Journey?</h2>
+            <p>Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started and begin preserving your most precious memories.</p>
+            <div style="margin-top: 2.5rem;">
+                <a href="<?php echo url('register'); ?>" class="btn btn-primary">Create Your Account</a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <div class="footer-bottom">
-                <p>&copy; 2024 DiaryApp. All rights reserved. | Keep your stories safe. Keep your memories alive.</p>
+            <div class="footer-section">
+                <h3>DiaryApp</h3>
+                <p>Capture every moment, express every emotion, and build a lasting record of your journey. Keep your stories safe. Keep your memories alive.</p>
+                <div class="footer-social">
+                    <a href="#" title="Twitter" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7z"/></svg>
+                    </a>
+                    <a href="#" title="Facebook" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a6 6 0 00-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a1 1 0 011-1h3z"/></svg>
+                    </a>
+                    <a href="#" title="Instagram" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" fill="#f5f5f5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#f5f5f5"/></svg>
+                    </a>
+                    <a href="#" title="LinkedIn" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                </div>
             </div>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#support">Support</a></li>
+                    <li><a href="<?php echo url('login'); ?>">Login</a></li>
+                    <li><a href="<?php echo url('register'); ?>">Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">GDPR</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 DiaryApp. All rights reserved. | Made with 💜 for your memories.</p>
         </div>
     </footer>
 
     <script>
+        // Translation object
+        const translations = {
+            en: {
+                'home': 'Home Page',
+                'features': 'Features',
+                'security': 'Security',
+                'support': 'Support',
+                'login': 'Login',
+                'hero-title': 'Your Life, Your Adventure',
+                'hero-subtitle': 'Capture every moment, express every emotion, and build a lasting record of your journey',
+                'hero-cta': 'START WRITING FREE',
+                'card-hearts': 'From All Over The World',
+                'card-hearts-desc': 'Write your diary anytime, anywhere. Access your thoughts from any device - mobile, tablet, or computer',
+                'card-secure': 'Completely Secure Servers',
+                'card-secure-desc': 'Your thoughts are safe with us. Military-grade encryption protects your personal data and diary entries',
+                'card-support': '24/7 Free Support',
+                'card-support-desc': 'Unlimited support through our help center, email, or ticket system. We\'re always here to help',
+                'features-title': 'Features',
+                'security-title': 'Security',
+                'support-title': 'Support',
+                'cta-title': 'Ready to Start Your Journey?',
+                'cta-desc': 'Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started and begin preserving your most precious memories.',
+                'cta-btn': 'Create Your Account'
+            },
+            jp: {
+                'home': 'ホーム',
+                'features': '機能',
+                'security': 'セキュリティ',
+                'support': 'サポート',
+                'login': 'ログイン',
+                'hero-title': 'あなたの人生、あなたの冒険',
+                'hero-subtitle': 'すべての瞬間を捉え、あらゆる感情を表現し、あなたの旅の永遠の記録を作成してください',
+                'hero-cta': '無料で執筆を開始',
+                'card-hearts': '世界中から',
+                'card-hearts-desc': 'いつでもどこでも日記を書いてください。モバイル、タブレット、コンピューターから思考にアクセスできます',
+                'card-secure': '完全に安全なサーバー',
+                'card-secure-desc': 'あなたの思考は私たちと一緒に安全です。軍用レベルの暗号化があなたの個人データと日記エントリを保護します',
+                'card-support': '24時間無料サポート',
+                'card-support-desc': 'ヘルプセンター、メール、またはチケットシステムを通じた無制限のサポート。私たちはいつでもお手伝いします',
+                'features-title': '機能',
+                'security-title': 'セキュリティ',
+                'support-title': 'サポート',
+                'cta-title': 'あなたの旅を始める準備はいいですか？',
+                'cta-desc': '何千人もの人々がDiaryAppで彼らの物語を撮影しています。始めるのに1分しかかかりません。',
+                'cta-btn': 'アカウントを作成'
+            },
+            cn: {
+                'home': '首页',
+                'features': '功能',
+                'security': '安全',
+                'support': '支持',
+                'login': '登录',
+                'hero-title': '你的生活，你的冒险',
+                'hero-subtitle': '捕捉每一刻，表达每一种情感，建立你旅程的永久记录',
+                'hero-cta': '开始免费书写',
+                'card-hearts': '来自世界各地',
+                'card-hearts-desc': '随时随地写日记。从移动设备、平板电脑或计算机访问您的想法',
+                'card-secure': '完全安全的服务器',
+                'card-secure-desc': '您的想法与我们一起是安全的。军用级加密保护您的个人数据和日记条目',
+                'card-support': '24/7 免费支持',
+                'card-support-desc': '通过帮助中心、电子邮件或票务系统提供无限支持。我们随时准备帮忙',
+                'features-title': '功能',
+                'security-title': '安全',
+                'support-title': '支持',
+                'cta-title': '准备好开始你的旅程了吗？',
+                'cta-desc': '加入数千人使用 DiaryApp 记录他们的故事。开始只需一分钟。',
+                'cta-btn': '创建您的帐户'
+            },
+            kr: {
+                'home': '홈',
+                'features': '기능',
+                'security': '보안',
+                'support': '지원',
+                'login': '로그인',
+                'hero-title': '당신의 삶, 당신의 모험',
+                'hero-subtitle': '모든 순간을 포착하고, 모든 감정을 표현하고, 여정의 영구 기록을 만드세요',
+                'hero-cta': '무료 작성 시작',
+                'card-hearts': '전 세계에서',
+                'card-hearts-desc': '언제 어디서나 일기를 쓰세요. 모바일, 태블릿 또는 컴퓨터에서 생각에 액세스하세요',
+                'card-secure': '완전히 안전한 서버',
+                'card-secure-desc': '당신의 생각은 우리와 함께 안전합니다. 군용 암호화가 개인 데이터와 일기 항목을 보호합니다',
+                'card-support': '24/7 무료 지원',
+                'card-support-desc': '도움말 센터, 이메일 또는 티켓 시스템을 통한 무제한 지원. 우리는 항상 도움을 드릴 준비가 되어 있습니다',
+                'features-title': '기능',
+                'security-title': '보안',
+                'support-title': '지원',
+                'cta-title': '여정을 시작할 준비가 되셨습니까?',
+                'cta-desc': 'DiaryApp으로 이야기를 작성하는 수천 명의 사람들과 함께하세요. 시작하는 데 1분만 소요됩니다.',
+                'cta-btn': '계정 만들기'
+            },
+            tl: {
+                'home': 'Tahanan',
+                'features': 'Mga Katangian',
+                'security': 'Seguridad',
+                'support': 'Suporta',
+                'login': 'Mag-log in',
+                'hero-title': 'Ang Iyong Buhay, Ang Iyong Pakikipagsapalaran',
+                'hero-subtitle': 'Kunin ang bawat sandali, ipahayag ang bawat emosyon, at lumikha ng isang pangmatagalang rekord ng iyong paglalakbay',
+                'hero-cta': 'MAGSIMULANG MAGSULAT NANG LIBRE',
+                'card-hearts': 'Mula sa Buong Mundo',
+                'card-hearts-desc': 'Sumulat ng iyong diary anumang oras, kahit saan. I-access ang iyong mga pag-iisip mula sa anumang device - mobile, tablet, o computer',
+                'card-secure': 'Lubos na Secure na Mga Servidor',
+                'card-secure-desc': 'Ang iyong mga pag-iisip ay ligtas sa amin. Ang military-grade encryption ay nagpoprotekta sa iyong personal na datos at mga entry sa diary',
+                'card-support': '24/7 Libreng Suporta',
+                'card-support-desc': 'Walang hanggang suporta sa pamamagitan ng aming help center, email, o ticket system. Lagi kaming handa na tumulong',
+                'features-title': 'Mga Katangian',
+                'security-title': 'Seguridad',
+                'support-title': 'Suporta',
+                'cta-title': 'Handa na ba kayong Magsimula ng Iyong Paglalakbay?',
+                'cta-desc': 'Sumali sa libu-libong taong kumukuha ng kanilang mga kuwento sa DiaryApp. Tumatagal lamang ng isang minuto upang magsimula.',
+                'cta-btn': 'Lumikha ng Iyong Account'
+            }
+        };
+
+        function translatePage(lang) {
+            const t = translations[lang] || translations.en;
+            
+            // Translate navigation
+            const navHome = document.querySelector('.nav-center a[href="#"]');
+            if (navHome) navHome.textContent = t['home'];
+            
+            const navFeatures = document.querySelector('.nav-center a[href="#features"]');
+            if (navFeatures) navFeatures.textContent = t['features'];
+            
+            const navSecurity = document.querySelector('.nav-center a[href="#security"]');
+            if (navSecurity) navSecurity.textContent = t['security'];
+            
+            const navSupport = document.querySelector('.nav-center a[href="#support"]');
+            if (navSupport) navSupport.textContent = t['support'];
+            
+            const navLogin = document.querySelector('.nav-right a');
+            if (navLogin) navLogin.textContent = t['login'];
+            
+            // Translate hero section
+            const heroTitle = document.querySelector('.hero h1');
+            if (heroTitle) heroTitle.textContent = t['hero-title'];
+            
+            const heroSubtitle = document.querySelector('.hero-subtitle');
+            if (heroSubtitle) heroSubtitle.textContent = t['hero-subtitle'];
+            
+            const heroCta = document.querySelector('.hero-cta .btn');
+            if (heroCta) heroCta.textContent = t['hero-cta'];
+            
+            // Translate feature cards
+            const featureCards = document.querySelectorAll('.features .feature-card');
+            if (featureCards[0]) {
+                featureCards[0].querySelector('span:nth-of-type(2)').textContent = t['card-hearts'];
+                featureCards[0].querySelector('p').textContent = t['card-hearts-desc'];
+            }
+            if (featureCards[1]) {
+                featureCards[1].querySelector('span:nth-of-type(2)').textContent = t['card-secure'];
+                featureCards[1].querySelector('p').textContent = t['card-secure-desc'];
+            }
+            if (featureCards[2]) {
+                featureCards[2].querySelector('span:nth-of-type(2)').textContent = t['card-support'];
+                featureCards[2].querySelector('p').textContent = t['card-support-desc'];
+            }
+        }
+
         // Language Dropdown Toggle
         const langBtn = document.getElementById('langBtn');
         const langMenu = document.getElementById('langMenu');
@@ -704,26 +1031,27 @@
             // Close menu
             langMenu.classList.remove('active');
             
-            // Here you could add logic to translate the page
-            console.log('Language changed to:', lang);
-            
-            // Reload page to apply language (optional)
-            // window.location.reload();
+            // Translate the page
+            translatePage(lang);
         }
 
         // Load saved language preference on page load
         window.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('diaryAppLanguage');
-            if (savedLang && savedLang !== 'en') {
-                const langNames = {
-                    'jp': 'JP',
-                    'cn': 'CN',
-                    'kr': 'KR',
-                    'tl': 'PH'
-                };
-                if (langBtn) {
-                    langBtn.textContent = langNames[savedLang] + ' ▼';
-                }
+            const savedLang = localStorage.getItem('diaryAppLanguage') || 'en';
+            const langNames = {
+                'en': 'EN',
+                'jp': 'JP',
+                'cn': 'CN',
+                'kr': 'KR',
+                'tl': 'PH'
+            };
+            if (langBtn) {
+                langBtn.textContent = langNames[savedLang] + ' ▼';
+            }
+            
+            // Apply saved language on page load
+            if (savedLang !== 'en') {
+                translatePage(savedLang);
             }
 
             // Smooth scroll for navigation links
@@ -741,6 +1069,21 @@
                     }
                 });
             });
+
+            // Navbar background change on scroll
+            const navbar = document.querySelector('.navbar');
+            const heroSection = document.querySelector('.hero');
+            
+            if (navbar && heroSection) {
+                window.addEventListener('scroll', function() {
+                    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+                    if (window.scrollY >= heroBottom) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
         });
     </script>
 </body>

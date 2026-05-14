@@ -80,26 +80,27 @@ include __DIR__ . '/../components/diary_header.php';
                                     </p>
                                 </div>
 
-                                <!-- Mood Badge -->
                                 <?php if ($entry['mood']): ?>
                                     <div class="flex justify-center">
-                                        <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full text-xs font-medium shadow-sm"
+                                        <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full text-xs font-medium shadow-sm gap-1.5"
                                               style="color: <?php echo htmlspecialchars($entry['text_color'] ?? '#000000'); ?>;
                                                      <?php if ($entry['text_bold'] ?? 0): ?>font-weight: bold;<?php endif; ?>
                                                      <?php if ($entry['text_italic'] ?? 0): ?>font-style: italic;<?php endif; ?>
                                                      <?php if ($entry['text_underline'] ?? 0): ?>text-decoration: underline;<?php endif; ?>">
                                             <?php
-                                            $moodEmojis = [
-                                                'Happy' => '😊',
-                                                'Calm' => '😌',
-                                                'Sad' => '😢',
-                                                'Anxious' => '😰',
-                                                'Excited' => '🤩',
-                                                'Tired' => '😴',
-                                                'Angry' => '😠',
-                                                'Loved' => '🥰'
+                                            $moodSvgs = [
+                                                'Happy' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><path d="M9 15c1 1 2 1.5 3 1.5s2-.5 3-1.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Calm' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><path d="M9 15h6" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Sad' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><path d="M9 16c1-1 2-1.5 3-1.5s2 .5 3 1.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Anxious' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15" cy="8.5" r="1.5" fill="currentColor"/><path d="M9 15h6M8 11l1-2M15 11l1-2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>',
+                                                'Excited' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><path d="M8 15c1 2 2.5 3 4 3s3-1 4-3" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Tired' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9a2 2 0 00-2 2 2 2 0 002 2 2 2 0 002-2 2 2 0 00-2-2M15 9a2 2 0 00-2 2 2 2 0 002 2 2 2 0 002-2 2 2 0 00-2-2" fill="currentColor"/><path d="M9 16h6" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Angry' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 9l2-1M16 9l-2-1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 15h6" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                                                'Loved' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9a1.5 1.5 0 013 0 1.5 1.5 0 01-3 0M12 9a1.5 1.5 0 013 0 1.5 1.5 0 01-3 0" fill="currentColor"/><path d="M12 17c1.5-1 3-2 3-3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>'
                                             ];
-                                            echo ($moodEmojis[$entry['mood']] ?? '😐') . ' ' . htmlspecialchars($entry['mood']);
+                                            
+                                            $moodName = htmlspecialchars($entry['mood']);
+                                            echo ($moodSvgs[$entry['mood']] ?? '<span>●</span>') . ' ' . $moodName;
                                             ?>
                                         </span>
                                     </div>
