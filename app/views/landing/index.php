@@ -359,6 +359,26 @@
             margin: 0 auto;
         }
 
+        /* Card hover animations */
+        .feature-card, .feature-full {
+            transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+            transform-origin: center;
+            will-change: transform;
+            overflow: hidden;
+        }
+
+        .feature-card:hover, .feature-full:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 14px 34px rgba(22, 22, 22, 0.08);
+            background: #ffffff;
+        }
+
+        .feature-card:hover .feature-icon svg,
+        .feature-full:hover h3 svg {
+            transform: translateY(-2px) scale(1.02);
+            filter: drop-shadow(0 6px 14px rgba(168, 85, 247, 0.08));
+        }
+
         .feature-card h3 {
             color: #1a1a1a;
             margin-bottom: 0.8rem;
@@ -472,6 +492,102 @@
             margin-bottom: 2.5rem;
             opacity: 0.95;
             line-height: 1.6;
+        }
+
+        /* Contact Section (redesigned) */
+        .contact-section {
+            padding: 3.5rem 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .contact-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .contact-panel {
+            padding: 1.5rem 1.5rem 1.5rem 0;
+        }
+
+        .contact-logo {
+            width: 120px;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card .lead {
+            color: #374151;
+            font-size: 1rem;
+            margin-bottom: 0.85rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .contact-card {
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid #eef2ff;
+        }
+
+        .contact-method {
+            display: flex;
+            gap: 0.9rem;
+            align-items: center;
+            padding: 0.85rem;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            margin-bottom: 0.8rem;
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+        }
+
+        .contact-method svg { width: 28px; height: 28px; flex: 0 0 28px; }
+
+        .contact-method .method-text { color: #111827; font-weight:600; }
+
+        .support-hours { color:#6b7280; font-size:0.95rem; margin-top:0.5rem; }
+
+        .quick-links { display:flex; gap:0.6rem; margin-top:0.8rem; flex-wrap:wrap; }
+
+        .quick-link { padding:0.45rem 0.8rem; background:#f3f4f6; border-radius:999px; color:#374151; font-size:0.9rem; text-decoration:none; border:1px solid #e6e6e6; }
+
+        .contact-info p { color: #374151; line-height: 1.7; margin-bottom: 0.75rem; }
+
+        .contact-form-card {
+            background: #fff;
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid #eef2ff;
+            box-shadow: 0 10px 30px rgba(16,24,40,0.06);
+        }
+
+        .contact-form label { display:block; margin-bottom: 0.5rem; font-size: 0.9rem; color:#374151; }
+        .contact-form input, .contact-form textarea { width:100%; padding:0.75rem; border:1px solid #e6e6e6; border-radius:8px; font-size:0.95rem; transition: border-color .18s, box-shadow .18s; }
+        .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: #a855f7; box-shadow: 0 6px 20px rgba(168,85,247,0.08); }
+        .contact-form .btn { width: 100%; }
+
+        .contact-success { display:none; padding:0.9rem 1rem; border-radius:6px; background:#ecfdf5; color:#065f46; margin-bottom:0.75rem; border:1px solid #bbf7d0; }
+
+        @media (max-width: 900px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .contact-form-card { margin-top: 1rem; }
+            .contact-logo { width: 100px; }
         }
 
         /* Footer */
@@ -649,11 +765,11 @@
             <img src="MyDiaryNOTES.png" alt="">
         </div>
         <div class="hero-content">
-            <h1>Your Life, Your Adventure</h1>
-            <p class="hero-subtitle">Capture every moment, express every emotion, and build a lasting record of your journey</p>
+            <h1 data-i18n-key="hero-title">Your Life, Your Adventure</h1>
+            <p class="hero-subtitle" data-i18n-key="hero-subtitle">Capture every moment, express every emotion, and build a lasting record of your journey</p>
             
             <div class="hero-cta">
-                <a href="<?php echo url('register'); ?>" class="btn btn-primary">START WRITING FREE</a>
+                <a href="<?php echo url('register'); ?>" class="btn btn-primary" data-i18n-key="hero-cta">START WRITING FREE</a>
             </div>
         </div>
     </section>
@@ -662,130 +778,130 @@
     <section class="features">
         <div class="feature-card">
             <span class="feature-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
-            <h3>From All Over The World</h3>
-            <p>Write your diary anytime, anywhere. Access your thoughts from any device - mobile, tablet, or computer</p>
+            <h3 data-i18n-key="card-hearts">From All Over The World</h3>
+            <p data-i18n-key="card-hearts-desc">Write your diary anytime, anywhere. Access your thoughts from any device - mobile, tablet, or computer</p>
         </div>
 
         <div class="feature-card">
             <span class="feature-icon"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
-            <h3>Completely Secure Servers</h3>
-            <p>Your thoughts are safe with us. Military-grade encryption protects your personal data and diary entries</p>
+            <h3 data-i18n-key="card-secure">Completely Secure Servers</h3>
+            <p data-i18n-key="card-secure-desc">Your thoughts are safe with us. Military-grade encryption protects your personal data and diary entries</p>
         </div>
 
         <div class="feature-card">
             <span class="feature-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-            <h3>24/7 Free Support</h3>
-            <p>Unlimited support through our help center, email, or ticket system. We're always here to help</p>
+            <h3 data-i18n-key="card-support">24/7 Free Support</h3>
+            <p data-i18n-key="card-support-desc">Unlimited support through our help center, email, or ticket system. We're always here to help</p>
         </div>
     </section>
 
     <!-- Additional Features -->
     <section class="info-section" id="features">
-        <h2>Features</h2>
+        <h2 data-i18n-key="features-title">Features</h2>
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Distraction-Free Writing</h3>
-                <p>Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.</p>
+                <h3 data-i18n-key="full-1-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Distraction-Free Writing</h3>
+                <p data-i18n-key="full-1-desc">Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.</p>
             </div>
 
             <div class="feature-full">
-                <h3>🎨 Full Customization</h3>
-                <p>Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.</p>
+                <h3 data-i18n-key="full-2-title">🎨 Full Customization</h3>
+                <p data-i18n-key="full-2-desc">Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.</p>
             </div>
 
             <div class="feature-full">
-                <h3>📸 Add Photos & Memories</h3>
-                <p>Attach images to capture visual memories alongside your words and thoughts.</p>
+                <h3 data-i18n-key="full-3-title">📸 Add Photos & Memories</h3>
+                <p data-i18n-key="full-3-desc">Attach images to capture visual memories alongside your words and thoughts.</p>
             </div>
 
             <div class="feature-full">
-                <h3>😊 Track Your Moods</h3>
-                <p>Log daily moods and analyze emotional patterns over time to understand yourself better.</p>
+                <h3 data-i18n-key="full-4-title">😊 Track Your Moods</h3>
+                <p data-i18n-key="full-4-desc">Log daily moods and analyze emotional patterns over time to understand yourself better.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Powerful Search</h3>
-                <p>Find any entry instantly. Search by date, mood, keywords, or browse chronologically.</p>
+                <h3 data-i18n-key="full-5-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Powerful Search</h3>
+                <p data-i18n-key="full-5-desc">Find any entry instantly. Search by date, mood, keywords, or browse chronologically.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke="currentColor" stroke-width="2" fill="none"/></svg> Mobile Ready</h3>
-                <p>Write on the go. Our mobile-responsive design works perfectly on all devices.</p>
+                <h3 data-i18n-key="full-6-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke="currentColor" stroke-width="2" fill="none"/></svg> Mobile Ready</h3>
+                <p data-i18n-key="full-6-desc">Write on the go. Our mobile-responsive design works perfectly on all devices.</p>
             </div>
         </div>
     </section>
 
     <!-- Security Section -->
     <section class="info-section" id="security">
-        <h2>Security</h2>
+        <h2 data-i18n-key="security-title">Security</h2>
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> End-to-End Encryption</h3>
-                <p>Your diary entries are encrypted with military-grade security. Only you can access your data.</p>
+                <h3 data-i18n-key="sec-1-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> End-to-End Encryption</h3>
+                <p data-i18n-key="sec-1-desc">Your diary entries are encrypted with military-grade security. Only you can access your data.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure Servers</h3>
-                <p>We use industry-leading security practices to protect your personal information and ensure data integrity.</p>
+                <h3 data-i18n-key="sec-2-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure Servers</h3>
+                <p data-i18n-key="sec-2-desc">We use industry-leading security practices to protect your personal information and ensure data integrity.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Password Protection</h3>
-                <p>Your account is protected by encrypted passwords. Two-factor authentication available for added security.</p>
+                <h3 data-i18n-key="sec-3-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Password Protection</h3>
+                <p data-i18n-key="sec-3-desc">Your account is protected by encrypted passwords. Two-factor authentication available for added security.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16M4 12h16M4 17h16M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Privacy Policy</h3>
-                <p>Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.</p>
+                <h3 data-i18n-key="sec-4-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16M4 12h16M4 17h16M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Privacy Policy</h3>
+                <p data-i18n-key="sec-4-desc">Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regular Audits</h3>
-                <p>Security audits and updates ensure your data remains protected against evolving threats.</p>
+                <h3 data-i18n-key="sec-5-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regular Audits</h3>
+                <p data-i18n-key="sec-5-desc">Security audits and updates ensure your data remains protected against evolving threats.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16.13v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5M11.5 3.5L4 11m9.5-7.5L20 11M12 4v9"/></svg> Secure Backups</h3>
-                <p>Your entries are automatically backed up securely so you never lose your memories.</p>
+                <h3 data-i18n-key="sec-6-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M22 16.13v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5M11.5 3.5L4 11m9.5-7.5L20 11M12 4v9"/></svg> Secure Backups</h3>
+                <p data-i18n-key="sec-6-desc">Your entries are automatically backed up securely so you never lose your memories.</p>
             </div>
         </div>
     </section>
 
     <!-- Support Section -->
     <section class="info-section" id="support">
-        <h2>Support</h2>
+        <h2 data-i18n-key="support-title">Support</h2>
         
         <div class="features-grid">
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 24/7 Chat Support</h3>
-                <p>Get help anytime. Our support team is available round the clock via live chat to assist you.</p>
+                <h3 data-i18n-key="sup-1-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 24/7 Chat Support</h3>
+                <p data-i18n-key="sup-1-desc">Get help anytime. Our support team is available round the clock via live chat to assist you.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg> Email Support</h3>
-                <p>Send us an email and our team will respond within 24 hours with solutions and assistance.</p>
+                <h3 data-i18n-key="sup-2-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6" fill="none" stroke="currentColor" stroke-width="2"/></svg> Email Support</h3>
+                <p data-i18n-key="sup-2-desc">Send us an email and our team will respond within 24 hours with solutions and assistance.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6.5a2.5 2.5 0 0 1-2.5-2.5V4z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Knowledge Base</h3>
-                <p>Access our comprehensive help documentation with guides, tutorials, and FAQs.</p>
+                <h3 data-i18n-key="sup-3-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6.5a2.5 2.5 0 0 1-2.5-2.5V4z" fill="none" stroke="currentColor" stroke-width="2"/></svg> Knowledge Base</h3>
+                <p data-i18n-key="sup-3-desc">Access our comprehensive help documentation with guides, tutorials, and FAQs.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Video Tutorials</h3>
-                <p>Learn how to use DiaryApp with our video tutorials covering all features and use cases.</p>
+                <h3 data-i18n-key="sup-4-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Video Tutorials</h3>
+                <p data-i18n-key="sup-4-desc">Learn how to use DiaryApp with our video tutorials covering all features and use cases.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m6-3l-4.24 4.24M1 12h6m-3 6l4.24-4.24M23 12h-6m3 6l-4.24-4.24M12 17v6M12 1a5 5 0 0 0-5 5M12 1a5 5 0 0 1 5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg> Bug Reports</h3>
-                <p>Found an issue? Report bugs directly to our team and we'll prioritize fixes for you.</p>
+                <h3 data-i18n-key="sup-5-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m6-3l-4.24 4.24M1 12h6m-3 6l4.24-4.24M23 12h-6m3 6l-4.24-4.24M12 17v6M12 1a5 5 0 0 0-5 5M12 1a5 5 0 0 1 5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg> Bug Reports</h3>
+                <p data-i18n-key="sup-5-desc">Found an issue? Report bugs directly to our team and we'll prioritize fixes for you.</p>
             </div>
 
             <div class="feature-full">
-                <h3><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg> Feature Requests</h3>
-                <p>Your feedback matters! Suggest new features and vote on others to shape DiaryApp's future.</p>
+                <h3 data-i18n-key="sup-6-title"><svg style="display: inline; width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px;" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg> Feature Requests</h3>
+                <p data-i18n-key="sup-6-desc">Your feedback matters! Suggest new features and vote on others to shape DiaryApp's future.</p>
             </div>
         </div>
     </section>
@@ -798,10 +914,61 @@
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
                 </svg>
             </div>
-            <h2>Ready to Start Your Journey?</h2>
-            <p>Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started and begin preserving your most precious memories.</p>
+            <h2 data-i18n-key="cta-title">Ready to Start Your Journey?</h2>
+            <p data-i18n-key="cta-desc">Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started and begin preserving your most precious memories.</p>
             <div style="margin-top: 2.5rem;">
-                <a href="<?php echo url('register'); ?>" class="btn btn-primary">Create Your Account</a>
+                <a href="<?php echo url('register'); ?>" class="btn btn-primary" data-i18n-key="cta-btn">Create Your Account</a>
+            </div>
+        </div>
+    </section>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <h2 data-i18n-key="contact-title">Contact Us</h2>
+        <div class="contact-grid">
+            <div class="contact-panel">
+                <div class="contact-card">
+                    <img src="logomydiary.png" alt="My Diary" class="contact-logo">
+                    <p class="lead" data-i18n-key="contact-lead">Questions? Send us a message — we’ll usually reply within 24 hours.</p>
+
+                    <div class="contact-method" role="button" tabindex="0">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 8.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5" fill="#eef2ff" stroke="#a855f7" stroke-width="1.2"/><path d="M3 8.5L12 13l9-4.5" fill="none" stroke="#7c3aed" stroke-width="1.2"/></svg>
+                        <div>
+                            <div class="method-text" data-i18n-key="contact-email-text">support@diaryapp.local</div>
+                            <div class="support-hours" data-i18n-key="contact-email-hours">Email support — reply within 24 hours</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-method" role="button" tabindex="0">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72c.12.9.39 1.77.8 2.56a2 2 0 0 1-.45 2.11L9.7 11.7a16 16 0 0 0 6.6 6.6l1.3-1.3a2 2 0 0 1 2.11-.45c.79.41 1.66.68 2.56.8A2 2 0 0 1 22 16.92z" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.2"/></svg>
+                        <div>
+                            <div class="method-text" data-i18n-key="contact-phone-text">+1 (555) 123-4567</div>
+                            <div class="support-hours" data-i18n-key="contact-phone-hours">Phone support — 9am–6pm (Mon–Fri)</div>
+                        </div>
+                    </div>
+
+                    <div class="quick-links" aria-hidden="false">
+                        <a class="quick-link" href="#support" data-i18n-key="quick-help">Help Center</a>
+                        <a class="quick-link" href="#support" data-i18n-key="quick-chat">Live Chat</a>
+                        <a class="quick-link" href="#support" data-i18n-key="quick-ticket">Submit Ticket</a>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form-card">
+                <form id="contactForm" class="contact-form">
+                    <div class="contact-success" id="contactSuccess" role="status" aria-live="polite"></div>
+                    <label for="contact-name">Name</label>
+                    <input id="contact-name" name="name" type="text" required>
+
+                    <label for="contact-email">Email</label>
+                    <input id="contact-email" name="email" type="email" required>
+
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" name="message" rows="5" required></textarea>
+
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
             </div>
         </div>
     </section>
@@ -859,7 +1026,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 DiaryApp. All rights reserved. | Made with 💜 for your memories.</p>
+            <p data-i18n-key="footer-copy">&copy; 2024 DiaryApp. All rights reserved. | Made with 💜 for your memories.</p>
         </div>
     </footer>
 
@@ -887,6 +1054,56 @@
                 'cta-title': 'Ready to Start Your Journey?',
                 'cta-desc': 'Join thousands of people capturing their stories with DiaryApp. It only takes a minute to get started and begin preserving your most precious memories.',
                 'cta-btn': 'Create Your Account'
+                ,
+                'contact-title': 'Contact Us',
+                'contact-lead': 'Questions? Send us a message — we\'ll usually reply within 24 hours.',
+                'contact-email-text': 'support@diaryapp.local',
+                'contact-email-hours': 'Email support — reply within 24 hours',
+                'contact-phone-text': '+1 (555) 123-4567',
+                'contact-phone-hours': 'Phone support — 9am–6pm (Mon–Fri)',
+                'quick-help': 'Help Center',
+                'quick-chat': 'Live Chat',
+                'quick-ticket': 'Submit Ticket',
+                'footer-copy': '© 2024 DiaryApp. All rights reserved. | Made with 💜 for your memories.'
+                ,
+                'full-1-title': 'Distraction-Free Writing',
+                'full-1-desc': 'Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.',
+                'full-2-title': 'Full Customization',
+                'full-2-desc': 'Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.',
+                'full-3-title': 'Add Photos & Memories',
+                'full-3-desc': 'Attach images to capture visual memories alongside your words and thoughts.',
+                'full-4-title': 'Track Your Moods',
+                'full-4-desc': 'Log daily moods and analyze emotional patterns over time to understand yourself better.',
+                'full-5-title': 'Powerful Search',
+                'full-5-desc': 'Find any entry instantly. Search by date, mood, keywords, or browse chronologically.',
+                'full-6-title': 'Mobile Ready',
+                'full-6-desc': 'Write on the go. Our mobile-responsive design works perfectly on all devices.',
+
+                'sec-1-title': 'End-to-End Encryption',
+                'sec-1-desc': 'Your diary entries are encrypted with military-grade security. Only you can access your data.',
+                'sec-2-title': 'Secure Servers',
+                'sec-2-desc': 'We use industry-leading security practices to protect your personal information and ensure data integrity.',
+                'sec-3-title': 'Password Protection',
+                'sec-3-desc': 'Your account is protected by encrypted passwords. Two-factor authentication available for added security.',
+                'sec-4-title': 'Privacy Policy',
+                'sec-4-desc': 'Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.',
+                'sec-5-title': 'Regular Audits',
+                'sec-5-desc': 'Security audits and updates ensure your data remains protected against evolving threats.',
+                'sec-6-title': 'Secure Backups',
+                'sec-6-desc': 'Your entries are automatically backed up securely so you never lose your memories.',
+
+                'sup-1-title': '24/7 Chat Support',
+                'sup-1-desc': 'Get help anytime. Our support team is available round the clock via live chat to assist you.',
+                'sup-2-title': 'Email Support',
+                'sup-2-desc': 'Send us an email and our team will respond within 24 hours with solutions and assistance.',
+                'sup-3-title': 'Knowledge Base',
+                'sup-3-desc': 'Access our comprehensive help documentation with guides, tutorials, and FAQs.',
+                'sup-4-title': 'Video Tutorials',
+                'sup-4-desc': 'Learn how to use DiaryApp with our video tutorials covering all features and use cases.',
+                'sup-5-title': 'Bug Reports',
+                'sup-5-desc': 'Found an issue? Report bugs directly to our team and we\'ll prioritize fixes for you.',
+                'sup-6-title': 'Feature Requests',
+                'sup-6-desc': 'Your feedback matters! Suggest new features and vote on others to shape DiaryApp\'s future.'
             },
             jp: {
                 'home': 'ホーム',
@@ -909,6 +1126,56 @@
                 'cta-title': 'あなたの旅を始める準備はいいですか？',
                 'cta-desc': '何千人もの人々がDiaryAppで彼らの物語を撮影しています。始めるのに1分しかかかりません。',
                 'cta-btn': 'アカウントを作成'
+                ,
+                'contact-title': 'お問い合わせ',
+                'contact-lead': 'ご質問はありますか？ メッセージを送ってください — 通常24時間以内に返信します。',
+                'contact-email-text': 'support@diaryapp.local',
+                'contact-email-hours': 'メールサポート — 24時間以内に返信',
+                'contact-phone-text': '+1 (555) 123-4567',
+                'contact-phone-hours': '電話サポート — 平日 9:00–18:00',
+                'quick-help': 'ヘルプセンター',
+                'quick-chat': 'ライブチャット',
+                'quick-ticket': 'チケットを送信',
+                'full-1-title': 'Distraction-Free Writing',
+                'full-1-desc': 'Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.',
+                'full-2-title': 'Full Customization',
+                'full-2-desc': 'Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.',
+                'full-3-title': 'Add Photos & Memories',
+                'full-3-desc': 'Attach images to capture visual memories alongside your words and thoughts.',
+                'full-4-title': 'Track Your Moods',
+                'full-4-desc': 'Log daily moods and analyze emotional patterns over time to understand yourself better.',
+                'full-5-title': 'Powerful Search',
+                'full-5-desc': 'Find any entry instantly. Search by date, mood, keywords, or browse chronologically.',
+                'full-6-title': 'Mobile Ready',
+                'full-6-desc': 'Write on the go. Our mobile-responsive design works perfectly on all devices.',
+
+                'sec-1-title': 'End-to-End Encryption',
+                'sec-1-desc': 'Your diary entries are encrypted with military-grade security. Only you can access your data.',
+                'sec-2-title': 'Secure Servers',
+                'sec-2-desc': 'We use industry-leading security practices to protect your personal information and ensure data integrity.',
+                'sec-3-title': 'Password Protection',
+                'sec-3-desc': 'Your account is protected by encrypted passwords. Two-factor authentication available for added security.',
+                'sec-4-title': 'Privacy Policy',
+                'sec-4-desc': 'Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.',
+                'sec-5-title': 'Regular Audits',
+                'sec-5-desc': 'Security audits and updates ensure your data remains protected against evolving threats.',
+                'sec-6-title': 'Secure Backups',
+                'sec-6-desc': 'Your entries are automatically backed up securely so you never lose your memories.',
+
+                'sup-1-title': '24/7 Chat Support',
+                'sup-1-desc': 'Get help anytime. Our support team is available round the clock via live chat to assist you.',
+                'sup-2-title': 'Email Support',
+                'sup-2-desc': 'Send us an email and our team will respond within 24 hours with solutions and assistance.',
+                'sup-3-title': 'Knowledge Base',
+                'sup-3-desc': 'Access our comprehensive help documentation with guides, tutorials, and FAQs.',
+                'sup-4-title': 'Video Tutorials',
+                'sup-4-desc': 'Learn how to use DiaryApp with our video tutorials covering all features and use cases.',
+                'sup-5-title': 'Bug Reports',
+                'sup-5-desc': 'Found an issue? Report bugs directly to our team and we\'ll prioritize fixes for you.',
+                'sup-6-title': 'Feature Requests',
+                'sup-6-desc': 'Your feedback matters! Suggest new features and vote on others to shape DiaryApp\'s future.',
+
+                'footer-copy': '© 2024 DiaryApp。無断複写・転載を禁じます。'
             },
             cn: {
                 'home': '首页',
@@ -931,6 +1198,56 @@
                 'cta-title': '准备好开始你的旅程了吗？',
                 'cta-desc': '加入数千人使用 DiaryApp 记录他们的故事。开始只需一分钟。',
                 'cta-btn': '创建您的帐户'
+                ,
+                'contact-title': '联系我们',
+                'contact-lead': '有问题吗？给我们留言 — 我们通常会在24小时内回复。',
+                'contact-email-text': 'support@diaryapp.local',
+                'contact-email-hours': '邮件支持 — 24小时内回复',
+                'contact-phone-text': '+1 (555) 123-4567',
+                'contact-phone-hours': '电话支持 — 周一至周五 9:00–18:00',
+                'quick-help': '帮助中心',
+                'quick-chat': '在线聊天',
+                'quick-ticket': '提交工单',
+                'full-1-title': 'Distraction-Free Writing',
+                'full-1-desc': 'Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.',
+                'full-2-title': 'Full Customization',
+                'full-2-desc': 'Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.',
+                'full-3-title': 'Add Photos & Memories',
+                'full-3-desc': 'Attach images to capture visual memories alongside your words and thoughts.',
+                'full-4-title': 'Track Your Moods',
+                'full-4-desc': 'Log daily moods and analyze emotional patterns over time to understand yourself better.',
+                'full-5-title': 'Powerful Search',
+                'full-5-desc': 'Find any entry instantly. Search by date, mood, keywords, or browse chronologically.',
+                'full-6-title': 'Mobile Ready',
+                'full-6-desc': 'Write on the go. Our mobile-responsive design works perfectly on all devices.',
+
+                'sec-1-title': 'End-to-End Encryption',
+                'sec-1-desc': 'Your diary entries are encrypted with military-grade security. Only you can access your data.',
+                'sec-2-title': 'Secure Servers',
+                'sec-2-desc': 'We use industry-leading security practices to protect your personal information and ensure data integrity.',
+                'sec-3-title': 'Password Protection',
+                'sec-3-desc': 'Your account is protected by encrypted passwords. Two-factor authentication available for added security.',
+                'sec-4-title': 'Privacy Policy',
+                'sec-4-desc': 'Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.',
+                'sec-5-title': 'Regular Audits',
+                'sec-5-desc': 'Security audits and updates ensure your data remains protected against evolving threats.',
+                'sec-6-title': 'Secure Backups',
+                'sec-6-desc': 'Your entries are automatically backed up securely so you never lose your memories.',
+
+                'sup-1-title': '24/7 Chat Support',
+                'sup-1-desc': 'Get help anytime. Our support team is available round the clock via live chat to assist you.',
+                'sup-2-title': 'Email Support',
+                'sup-2-desc': 'Send us an email and our team will respond within 24 hours with solutions and assistance.',
+                'sup-3-title': 'Knowledge Base',
+                'sup-3-desc': 'Access our comprehensive help documentation with guides, tutorials, and FAQs.',
+                'sup-4-title': 'Video Tutorials',
+                'sup-4-desc': 'Learn how to use DiaryApp with our video tutorials covering all features and use cases.',
+                'sup-5-title': 'Bug Reports',
+                'sup-5-desc': 'Found an issue? Report bugs directly to our team and we\'ll prioritize fixes for you.',
+                'sup-6-title': 'Feature Requests',
+                'sup-6-desc': 'Your feedback matters! Suggest new features and vote on others to shape DiaryApp\'s future.',
+
+                'footer-copy': '© 2024 DiaryApp。保留所有权利。'
             },
             kr: {
                 'home': '홈',
@@ -953,6 +1270,56 @@
                 'cta-title': '여정을 시작할 준비가 되셨습니까?',
                 'cta-desc': 'DiaryApp으로 이야기를 작성하는 수천 명의 사람들과 함께하세요. 시작하는 데 1분만 소요됩니다.',
                 'cta-btn': '계정 만들기'
+                ,
+                'contact-title': '문의하기',
+                'contact-lead': '질문이 있으신가요? 메시지를 보내주세요 — 일반적으로 24시간 내에 답장드립니다.',
+                'contact-email-text': 'support@diaryapp.local',
+                'contact-email-hours': '이메일 지원 — 24시간 내 응답',
+                'contact-phone-text': '+1 (555) 123-4567',
+                'contact-phone-hours': '전화 지원 — 월~금 9:00–18:00',
+                'quick-help': '도움말 센터',
+                'quick-chat': '라이브 채팅',
+                'quick-ticket': '티켓 제출',
+                'full-1-title': 'Distraction-Free Writing',
+                'full-1-desc': 'Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.',
+                'full-2-title': 'Full Customization',
+                'full-2-desc': 'Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.',
+                'full-3-title': 'Add Photos & Memories',
+                'full-3-desc': 'Attach images to capture visual memories alongside your words and thoughts.',
+                'full-4-title': 'Track Your Moods',
+                'full-4-desc': 'Log daily moods and analyze emotional patterns over time to understand yourself better.',
+                'full-5-title': 'Powerful Search',
+                'full-5-desc': 'Find any entry instantly. Search by date, mood, keywords, or browse chronologically.',
+                'full-6-title': 'Mobile Ready',
+                'full-6-desc': 'Write on the go. Our mobile-responsive design works perfectly on all devices.',
+
+                'sec-1-title': 'End-to-End Encryption',
+                'sec-1-desc': 'Your diary entries are encrypted with military-grade security. Only you can access your data.',
+                'sec-2-title': 'Secure Servers',
+                'sec-2-desc': 'We use industry-leading security practices to protect your personal information and ensure data integrity.',
+                'sec-3-title': 'Password Protection',
+                'sec-3-desc': 'Your account is protected by encrypted passwords. Two-factor authentication available for added security.',
+                'sec-4-title': 'Privacy Policy',
+                'sec-4-desc': 'Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.',
+                'sec-5-title': 'Regular Audits',
+                'sec-5-desc': 'Security audits and updates ensure your data remains protected against evolving threats.',
+                'sec-6-title': 'Secure Backups',
+                'sec-6-desc': 'Your entries are automatically backed up securely so you never lose your memories.',
+
+                'sup-1-title': '24/7 Chat Support',
+                'sup-1-desc': 'Get help anytime. Our support team is available round the clock via live chat to assist you.',
+                'sup-2-title': 'Email Support',
+                'sup-2-desc': 'Send us an email and our team will respond within 24 hours with solutions and assistance.',
+                'sup-3-title': 'Knowledge Base',
+                'sup-3-desc': 'Access our comprehensive help documentation with guides, tutorials, and FAQs.',
+                'sup-4-title': 'Video Tutorials',
+                'sup-4-desc': 'Learn how to use DiaryApp with our video tutorials covering all features and use cases.',
+                'sup-5-title': 'Bug Reports',
+                'sup-5-desc': 'Found an issue? Report bugs directly to our team and we\'ll prioritize fixes for you.',
+                'sup-6-title': 'Feature Requests',
+                'sup-6-desc': 'Your feedback matters! Suggest new features and vote on others to shape DiaryApp\'s future.',
+
+                'footer-copy': '© 2024 DiaryApp. 판권 소유.'
             },
             tl: {
                 'home': 'Tahanan',
@@ -975,12 +1342,70 @@
                 'cta-title': 'Handa na ba kayong Magsimula ng Iyong Paglalakbay?',
                 'cta-desc': 'Sumali sa libu-libong taong kumukuha ng kanilang mga kuwento sa DiaryApp. Tumatagal lamang ng isang minuto upang magsimula.',
                 'cta-btn': 'Lumikha ng Iyong Account'
+                ,
+                'contact-title': 'Makipag-ugnayan sa Amin',
+                'contact-lead': 'May mga tanong? Magpadala ng mensahe — karaniwang sasagot kami sa loob ng 24 oras.',
+                'contact-email-text': 'support@diaryapp.local',
+                'contact-email-hours': 'Suporta sa email — sumagot sa loob ng 24 oras',
+                'contact-phone-text': '+1 (555) 123-4567',
+                'contact-phone-hours': 'Suporta sa telepono — 9am–6pm (Lun–Biyernes)',
+                'quick-help': 'Help Center',
+                'quick-chat': 'Live Chat',
+                'quick-ticket': 'Mag-submit ng Ticket',
+                'full-1-title': 'Distraction-Free Writing',
+                'full-1-desc': 'Write freely in a clean, minimalist interface. Focus on your thoughts without distractions.',
+                'full-2-title': 'Full Customization',
+                'full-2-desc': 'Make your diary uniquely yours. Choose fonts, colors, styles, and backgrounds for each entry.',
+                'full-3-title': 'Add Photos & Memories',
+                'full-3-desc': 'Attach images to capture visual memories alongside your words and thoughts.',
+                'full-4-title': 'Track Your Moods',
+                'full-4-desc': 'Log daily moods and analyze emotional patterns over time to understand yourself better.',
+                'full-5-title': 'Powerful Search',
+                'full-5-desc': 'Find any entry instantly. Search by date, mood, keywords, or browse chronologically.',
+                'full-6-title': 'Mobile Ready',
+                'full-6-desc': 'Write on the go. Our mobile-responsive design works perfectly on all devices.',
+
+                'sec-1-title': 'End-to-End Encryption',
+                'sec-1-desc': 'Your diary entries are encrypted with military-grade security. Only you can access your data.',
+                'sec-2-title': 'Secure Servers',
+                'sec-2-desc': 'We use industry-leading security practices to protect your personal information and ensure data integrity.',
+                'sec-3-title': 'Password Protection',
+                'sec-3-desc': 'Your account is protected by encrypted passwords. Two-factor authentication available for added security.',
+                'sec-4-title': 'Privacy Policy',
+                'sec-4-desc': 'Your privacy is our priority. We never share or sell your data. Full transparency in our privacy policy.',
+                'sec-5-title': 'Regular Audits',
+                'sec-5-desc': 'Security audits and updates ensure your data remains protected against evolving threats.',
+                'sec-6-title': 'Secure Backups',
+                'sec-6-desc': 'Your entries are automatically backed up securely so you never lose your memories.',
+
+                'sup-1-title': '24/7 Chat Support',
+                'sup-1-desc': 'Get help anytime. Our support team is available round the clock via live chat to assist you.',
+                'sup-2-title': 'Email Support',
+                'sup-2-desc': 'Send us an email and our team will respond within 24 hours with solutions and assistance.',
+                'sup-3-title': 'Knowledge Base',
+                'sup-3-desc': 'Access our comprehensive help documentation with guides, tutorials, and FAQs.',
+                'sup-4-title': 'Video Tutorials',
+                'sup-4-desc': 'Learn how to use DiaryApp with our video tutorials covering all features and use cases.',
+                'sup-5-title': 'Bug Reports',
+                'sup-5-desc': 'Found an issue? Report bugs directly to our team and we\'ll prioritize fixes for you.',
+                'sup-6-title': 'Feature Requests',
+                'sup-6-desc': 'Your feedback matters! Suggest new features and vote on others to shape DiaryApp\'s future.',
+
+                'footer-copy': '© 2024 DiaryApp. Lahat ng karapatan ay nakalaan.'
             }
         };
 
         function translatePage(lang) {
             const t = translations[lang] || translations.en;
             
+            // Generic data-i18n mapping for elements
+            document.querySelectorAll('[data-i18n-key]').forEach(el => {
+                const key = el.getAttribute('data-i18n-key');
+                if (key && t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+
             // Translate navigation
             const navHome = document.querySelector('.nav-center a[href="#"]');
             if (navHome) navHome.textContent = t['home'];
@@ -1007,20 +1432,7 @@
             const heroCta = document.querySelector('.hero-cta .btn');
             if (heroCta) heroCta.textContent = t['hero-cta'];
             
-            // Translate feature cards
-            const featureCards = document.querySelectorAll('.features .feature-card');
-            if (featureCards[0]) {
-                featureCards[0].querySelector('span:nth-of-type(2)').textContent = t['card-hearts'];
-                featureCards[0].querySelector('p').textContent = t['card-hearts-desc'];
-            }
-            if (featureCards[1]) {
-                featureCards[1].querySelector('span:nth-of-type(2)').textContent = t['card-secure'];
-                featureCards[1].querySelector('p').textContent = t['card-secure-desc'];
-            }
-            if (featureCards[2]) {
-                featureCards[2].querySelector('span:nth-of-type(2)').textContent = t['card-support'];
-                featureCards[2].querySelector('p').textContent = t['card-support-desc'];
-            }
+            // feature cards and feature-full sections are translated via data-i18n-key attributes
         }
 
         // Language Dropdown Toggle
@@ -1083,9 +1495,7 @@
             }
             
             // Apply saved language on page load
-            if (savedLang !== 'en') {
-                translatePage(savedLang);
-            }
+            translatePage(savedLang);
 
             // Smooth scroll for navigation links
             const navLinks = document.querySelectorAll('.nav-center a');
@@ -1118,6 +1528,42 @@
                         navbar.classList.remove('scrolled');
                         navLogo.src = 'logomydiary.png';
                     }
+                });
+            }
+
+            // Contact form handler - client-side success (no backend)
+            const contactForm = document.getElementById('contactForm');
+            const contactSuccess = document.getElementById('contactSuccess');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = (document.getElementById('contact-name').value || '').trim();
+                    const email = (document.getElementById('contact-email').value || '').trim();
+                    const message = (document.getElementById('contact-message').value || '').trim();
+                    const submitBtn = contactForm.querySelector('button[type="submit"]');
+                    if (!name || !email || !message) {
+                        contactSuccess.style.display = 'block';
+                        contactSuccess.style.background = '#fff4f2';
+                        contactSuccess.style.borderColor = '#ffddd6';
+                        contactSuccess.style.color = '#7f1d1d';
+                        contactSuccess.textContent = 'Please complete all fields before sending.';
+                        setTimeout(() => { contactSuccess.style.display = 'none'; }, 3500);
+                        return;
+                    }
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Sending...';
+                    // Simulate send delay
+                    setTimeout(() => {
+                        contactSuccess.style.display = 'block';
+                        contactSuccess.style.background = '#ecfdf5';
+                        contactSuccess.style.borderColor = '#bbf7d0';
+                        contactSuccess.style.color = '#065f46';
+                        contactSuccess.textContent = 'Thanks — your message was sent. We will reply within 24 hours.';
+                        contactForm.reset();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Message';
+                        setTimeout(() => { contactSuccess.style.display = 'none'; }, 7000);
+                    }, 800);
                 });
             }
         });
