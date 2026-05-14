@@ -148,6 +148,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const zIndex = parseInt(card.style.zIndex) || 0;
         if (zIndex > maxZIndex) maxZIndex = zIndex;
     });
+    
+    // Apply saved layout mode to container
+    const container = document.getElementById('entries-container');
+    if (container) {
+        if (layoutMode) {
+            // Arranged mode
+            container.classList.remove('move-mode-enabled');
+            container.classList.add('move-mode-disabled');
+        } else {
+            // Freeform mode
+            container.classList.remove('move-mode-disabled');
+            container.classList.add('move-mode-enabled');
+        }
+    }
 });
 
 // Mouse events for dragging (only in freeform mode)
@@ -290,7 +304,7 @@ function saveCardPosition(entryId, x, y, rotation, zIndex) {
     .then(response => response.json())
     .then(data => {
         if (!data.success) {
-            console.error('Failed to save position');
+            console.error('Failed to save position:', data.message);
         }
     })
     .catch(error => {
@@ -323,32 +337,6 @@ function deleteEntry(id) {
         form.submit();
     }
 }
-
-// Utility functions
-function saveCardPosition(entryId, x, y, rotation, zIndex) {
-    fetch('<?php echo APP_URL; ?>/api/update-position', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            entry_id: entryId,
-            position_x: x,
-            position_y: y,
-            rotation: rotation,
-            z_index: zIndex
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.success) {
-            console.error('Failed to save position');
-        }
-    })
-    .catch(error => {
-        console.error('Error saving position:', error);
-    });
-}
 </script>
 
 <style>
@@ -370,6 +358,7 @@ function saveCardPosition(entryId, x, y, rotation, zIndex) {
 .line-clamp-6 {
     display: -webkit-box;
     -webkit-line-clamp: 6;
+    line-clamp: 6;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

@@ -94,28 +94,37 @@ class UploadController {
     public function delete() {
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
-            echo json_encode(['error' => 'Unauthorized']);
+            echo json_encode(['success' => false, 'error' => 'Unauthorized']);
             exit;
         }
 
         if (!$this->imageModel) {
             http_response_code(500);
-            echo json_encode(['error' => 'Database error']);
+            echo json_encode(['success' => false, 'error' => 'Database error']);
             exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed']);
+            echo json_encode(['success' => false, 'error' => 'Method not allowed']);
             exit;
         }
 
-        $imageId = filter_input(INPUT_POST, 'image_id', FILTER_SANITIZE_NUMBER_INT);
-        $diaryId = filter_input(INPUT_POST, 'diary_id', FILTER_SANITIZE_NUMBER_INT);
+        // Parse JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Invalid JSON input']);
+            exit;
+        }
+
+        $imageId = intval($input['image_id'] ?? 0);
+        $diaryId = intval($input['diary_id'] ?? 0);
 
         if (!$imageId || !$diaryId) {
             http_response_code(400);
-            echo json_encode(['error' => 'Image ID and Diary ID required']);
+            echo json_encode(['success' => false, 'error' => 'Image ID and Diary ID required']);
             exit;
         }
 
@@ -126,20 +135,25 @@ class UploadController {
 
         if (empty($image)) {
             http_response_code(404);
-            echo json_encode(['error' => 'Image not found']);
+            echo json_encode(['success' => false, 'error' => 'Image not found']);
             exit;
         }
 
         $image = reset($image);
-        unlink($image['path']);
-        if ($image['thumbnail_path']) {
+        
+        // Delete files from filesystem
+        if (file_exists($image['path'])) {
+            unlink($image['path']);
+        }
+        if ($image['thumbnail_path'] && file_exists($image['thumbnail_path'])) {
             unlink($image['thumbnail_path']);
         }
 
+        // Delete from database
         $this->imageModel->delete($imageId, $diaryId);
 
         header('Content-Type: application/json');
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Image deleted successfully']);
         exit;
     }
 

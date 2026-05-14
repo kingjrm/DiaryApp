@@ -100,7 +100,22 @@ $mood = $_GET['mood'] ?? '';
 
 <script>
 let searchTimeout;
-let layoutMode = true;
+// Initialize layout mode from localStorage (default to freeform/false)
+let layoutMode = localStorage.getItem('diaryLayoutMode') === 'true' ? true : false;
+
+// Set checkbox state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('layout-mode-toggle');
+    if (checkbox) {
+        checkbox.checked = layoutMode;
+    }
+    
+    // Apply the saved layout mode
+    const label = document.getElementById('layout-mode-label');
+    if (label) {
+        label.textContent = layoutMode ? 'Arranged Mode' : 'Freeform Mode';
+    }
+});
 
 function changeDate(date) {
     const url = new URL(window.location);
@@ -140,19 +155,48 @@ function toggleLayoutMode(enabled) {
     }
     layoutMode = enabled;
     
+    // Save layout mode preference to localStorage
+    localStorage.setItem('diaryLayoutMode', enabled);
+    
     const label = document.getElementById('layout-mode-label');
     
     if (enabled) {
-        // Arranged mode: clean grid layout
+        // Arranged mode: keep current positions, just update styling
         label.textContent = 'Arranged Mode';
-        arrangeCardsInGrid();
-        showToast('Cards arranged in clean grid', 'info');
+        updateCardStyling(true);
+        showToast('Switched to Arranged Mode - positions saved!', 'info');
     } else {
         // Freeform mode: allow dragging
         label.textContent = 'Freeform Mode';
-        enableFreeformMode();
+        updateCardStyling(false);
         showToast('Freeform mode - drag cards anywhere!', 'info');
     }
+}
+
+function updateCardStyling(isArrangedMode) {
+    const cards = document.querySelectorAll('.diary-card');
+    
+    cards.forEach(card => {
+        if (isArrangedMode) {
+            // Arranged mode styling
+            card.style.transition = 'none';
+            const cardInner = card.querySelector('.bg-white');
+            const tapeCorners = card.querySelectorAll('.tape-corner');
+            tapeCorners.forEach(tape => tape.style.display = 'none');
+            cardInner.classList.remove('shadow-lg', 'border-4', 'border-white');
+            cardInner.classList.add('shadow-md', 'border-2', 'border-gray-200');
+            card.style.cursor = 'default';
+        } else {
+            // Freeform mode styling
+            card.style.transition = 'none';
+            const cardInner = card.querySelector('.bg-white');
+            const tapeCorners = card.querySelectorAll('.tape-corner');
+            tapeCorners.forEach(tape => tape.style.display = 'block');
+            cardInner.classList.remove('shadow-md', 'border-2', 'border-gray-200');
+            cardInner.classList.add('shadow-lg', 'border-4', 'border-white');
+            card.style.cursor = 'grab';
+        }
+    });
 }
 
 function arrangeCardsInGrid() {
@@ -257,17 +301,29 @@ function saveCardPosition(entryId, x, y, rotation, zIndex) {
             position_x: x,
             position_y: y,
             rotation: rotation,
-            z_index: zIndex
+            z_index: zIndex,
+            csrf_token: getCsrfToken()
         })
     })
     .then(response => response.json())
     .then(data => {
         if (!data.success) {
-            console.error('Failed to save position');
+            console.error('Failed to save position:', data.message);
         }
     })
     .catch(error => {
         console.error('Error saving position:', error);
     });
+}
+
+function getCsrfToken() {
+    // Try to get CSRF token from meta tag, hidden input, or session
+    const metaToken = document.querySelector('meta[name="csrf-token"]');
+    if (metaToken) return metaToken.getAttribute('content');
+    
+    const inputToken = document.querySelector('input[name="csrf_token"]');
+    if (inputToken) return inputToken.value;
+    
+    return '';
 }
 </script>

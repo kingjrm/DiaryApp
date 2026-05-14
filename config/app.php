@@ -49,7 +49,7 @@ function verifyCSRF() {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die('CSRF token validation failed');
     }
-    // Regenerate token after successful verification
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    // Don't regenerate token here - it breaks AJAX requests with stale tokens
+    // Token will be regenerated on page reload
 }
 ?>

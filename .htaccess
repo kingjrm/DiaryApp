@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# OPTIONAL: For clean URLs without index.php
+# If enabled, URLs will be: http://localhost/DiaryApp/login
+# If disabled, URLs will be: http://localhost/DiaryApp/index.php?url=/login
+
+# Prevent direct access to sensitive directories
+RewriteRule ^(config|app|storage|helpers|middleware|routes|vendor)/ - [F]
+
+# Route all requests through index.php (only if .htaccess is enabled)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Security headers
+<FilesMatch "\.(php|phtml)$">
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</FilesMatch>
+
+# Allow static assets
+<FilesMatch "\.(jpg|jpeg|png|gif|ico|css|js|woff|woff2|ttf|svg)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>

@@ -19,14 +19,21 @@ class MoodController {
             exit;
         }
 
+        // Verify CSRF token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'CSRF token validation failed']);
+            exit;
+        }
+
         if (!$this->moodModel) {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Database error']);
             exit;
         }
 
-        $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
-        $note = filter_input(INPUT_POST, 'note', FILTER_SANITIZE_STRING);
+        $mood = filter_input(INPUT_POST, 'mood', FILTER_UNSAFE_RAW);
+        $note = filter_input(INPUT_POST, 'note', FILTER_UNSAFE_RAW);
 
         if (!$mood) {
             http_response_code(400);

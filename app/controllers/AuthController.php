@@ -40,6 +40,16 @@ class AuthController {
             }
         }
     }
+
+    public function landing() {
+        // Show landing page if not authenticated
+        if (isset($_SESSION['user_id'])) {
+            header('Location: ' . APP_URL . '/dashboard');
+            exit;
+        }
+        include __DIR__ . '/../views/landing/index.php';
+    }
+
     public function index() {
         if (isset($_SESSION['user_id'])) {
             header('Location: ' . APP_URL . '/dashboard');
@@ -59,7 +69,7 @@ class AuthController {
             // Process registration
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $password = $_POST['password'];
-            $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+            $name = filter_input(INPUT_POST, 'name', FILTER_UNSAFE_RAW);
 
             if (!$email || !$password || !$name) {
                 $_SESSION['error'] = 'All fields are required';

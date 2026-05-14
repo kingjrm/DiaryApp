@@ -63,13 +63,13 @@ class DiaryController {
         // Verify CSRF token
         verifyCSRF();
 
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+        $title = filter_input(INPUT_POST, 'title', FILTER_UNSAFE_RAW);
         $content = $_POST['content'];
-        $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
-        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
-        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING) ?: 'font-poppins';
-        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_SANITIZE_STRING) ?: '#ffffff';
-        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_SANITIZE_STRING) ?: '#000000';
+        $mood = filter_input(INPUT_POST, 'mood', FILTER_UNSAFE_RAW);
+        $date = filter_input(INPUT_POST, 'date', FILTER_UNSAFE_RAW);
+        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_UNSAFE_RAW) ?: 'font-poppins';
+        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_UNSAFE_RAW) ?: '#ffffff';
+        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_UNSAFE_RAW) ?: '#000000';
         $textBold = isset($_POST['text_bold']) ? 1 : 0;
         $textItalic = isset($_POST['text_italic']) ? 1 : 0;
         $textUnderline = isset($_POST['text_underline']) ? 1 : 0;
@@ -165,12 +165,12 @@ class DiaryController {
         // Verify CSRF token
         verifyCSRF();
 
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+        $title = filter_input(INPUT_POST, 'title', FILTER_UNSAFE_RAW);
         $content = $_POST['content'];
-        $mood = filter_input(INPUT_POST, 'mood', FILTER_SANITIZE_STRING);
-        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_SANITIZE_STRING);
-        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_SANITIZE_STRING);
-        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_SANITIZE_STRING);
+        $mood = filter_input(INPUT_POST, 'mood', FILTER_UNSAFE_RAW);
+        $fontFamily = filter_input(INPUT_POST, 'font_family', FILTER_UNSAFE_RAW);
+        $backgroundColor = filter_input(INPUT_POST, 'background_color', FILTER_UNSAFE_RAW);
+        $textColor = filter_input(INPUT_POST, 'text_color', FILTER_UNSAFE_RAW);
         $textBold = isset($_POST['text_bold']) ? 1 : 0;
         $textItalic = isset($_POST['text_italic']) ? 1 : 0;
         $textUnderline = isset($_POST['text_underline']) ? 1 : 0;
@@ -274,7 +274,7 @@ class DiaryController {
             exit;
         }
 
-        $query = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_STRING);
+        $query = filter_input(INPUT_GET, 'q', FILTER_UNSAFE_RAW);
         $entries = [];
         if ($query) {
             $entries = $this->diaryModel->search($_SESSION['user_id'], $query);
@@ -339,11 +339,15 @@ class DiaryController {
             $filename = uniqid() . '.' . $ext;
             $path = $uploadDir . $filename;
             $thumbnailPath = $uploadDir . 'thumb_' . $filename;
+            
+            // Store relative web path for database (without 'public/' since APP_URL already includes it)
+            $webPath = 'uploads/' . $filename;
+            $webThumbnailPath = 'uploads/thumb_' . $filename;
 
             if (move_uploaded_file($tmpName, $path)) {
                 // Create thumbnail
                 $this->createThumbnail($path, $thumbnailPath);
-                $this->imageModel->create($entryId, $filename, $originalName, $path, $thumbnailPath);
+                $this->imageModel->create($entryId, $filename, $originalName, $webPath, $webThumbnailPath);
                 $uploadedCount++;
             } else {
                 error_log("Failed to move uploaded file to: $path");
@@ -357,6 +361,12 @@ class DiaryController {
     }
 
     private function createThumbnail($source, $destination) {
+        // Check if GD library is available
+        if (!extension_loaded('gd')) {
+            error_log("GD library not available. Skipping thumbnail creation for: $source");
+            return; // Skip thumbnail creation if GD is not available
+        }
+
         $image = null;
         $ext = strtolower(pathinfo($source, PATHINFO_EXTENSION));
 
@@ -454,11 +464,18 @@ class DiaryController {
         }
 
         $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON input']);
+            return;
+        }
+        
         $entryId = $input['entry_id'] ?? null;
-        $positionX = $input['position_x'] ?? 0;
-        $positionY = $input['position_y'] ?? 0;
-        $rotation = $input['rotation'] ?? 0;
-        $zIndex = $input['z_index'] ?? 0;
+        $positionX = floatval($input['position_x'] ?? 0);
+        $positionY = floatval($input['position_y'] ?? 0);
+        $rotation = floatval($input['rotation'] ?? 0);
+        $zIndex = intval($input['z_index'] ?? 0);
 
         if (!$entryId) {
             http_response_code(400);
@@ -469,7 +486,7 @@ class DiaryController {
         $result = $this->diaryModel->updatePosition($entryId, $_SESSION['user_id'], $positionX, $positionY, $rotation, $zIndex);
 
         if ($result) {
-            echo json_encode(['success' => true]);
+            echo json_encode(['success' => true, 'message' => 'Position updated']);
         } else {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Failed to update position']);

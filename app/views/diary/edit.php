@@ -1,4 +1,15 @@
 <?php
+// Variables provided by DiaryController::edit()
+if (!isset($entry)) {
+    $_SESSION['error'] = 'Entry not found';
+    header('Location: ' . APP_URL . '/diary');
+    exit;
+}
+
+if (!isset($images)) {
+    $images = [];
+}
+
 $title = 'Edit Entry';
 include __DIR__ . '/../components/header.php';
 include __DIR__ . '/../components/diary_header.php';
@@ -209,8 +220,10 @@ include __DIR__ . '/../components/diary_header.php';
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <?php foreach ($images as $image): ?>
                         <div class="relative group bg-white rounded-lg overflow-hidden border border-gray-200 neumorphism">
-                            <img src="<?php echo APP_URL; ?>/<?php echo $image['thumbnail_path']; ?>"
-                                 class="w-full h-32 object-cover">
+                            <img src="<?php echo htmlspecialchars(APP_URL); ?>/<?php echo htmlspecialchars($image['thumbnail_path']); ?>"
+                                 class="w-full h-32 object-cover"
+                                 alt="Image thumbnail"
+                                 onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2212%22 fill=%22%236b7280%22%3ENo image%3C/text%3E%3C/svg%3E';">
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
                                 <button type="button"
                                         class="opacity-0 group-hover:opacity-100 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200 transform hover:scale-110"
@@ -220,7 +233,7 @@ include __DIR__ . '/../components/diary_header.php';
                                 </button>
                             </div>
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
-                                <p class="text-xs text-white opacity-75"><?php echo date('M j, Y', strtotime($image['uploaded_at'])); ?></p>
+                                <p class="text-xs text-white opacity-75"><?php echo htmlspecialchars(date('M j, Y', strtotime($image['uploaded_at']))); ?></p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -297,6 +310,12 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('title', document.getElementById('title').value);
         formData.append('date', document.getElementById('date').value);
         formData.append('mood', document.getElementById('mood').value);
+        
+        // Get CSRF token
+        const csrfInput = document.querySelector('input[name="csrf_token"]');
+        if (csrfInput) {
+            formData.append('csrf_token', csrfInput.value);
+        }
 
         fetch('<?php echo APP_URL; ?>/api/autosave', {
             method: 'POST',
@@ -306,6 +325,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showToast('Auto-saved', 'success');
             }
+        })
+        .catch(error => {
+            console.error('Auto-save error:', error);
         });
     }
 
@@ -347,15 +369,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(e) {
                     const previewDiv = document.createElement('div');
                     previewDiv.className = 'relative group bg-white rounded-lg overflow-hidden border border-gray-200 neumorphism';
+                    const escapedFileName = file.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                     previewDiv.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-24 object-cover">
+                        <img src="${e.target.result}" class="w-full h-24 object-cover" alt="Preview">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
                             <button type="button" class="opacity-0 group-hover:opacity-100 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-all duration-200" onclick="removeImage(this)">
                                 <i class="fas fa-times text-xs"></i>
                             </button>
                         </div>
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-1">
-                            <p class="text-xs text-white opacity-75">${file.name}</p>
+                            <p class="text-xs text-white opacity-75" title="${escapedFileName}">${escapedFileName}</p>
                         </div>
                     `;
                     imagePreview.appendChild(previewDiv);
@@ -406,24 +429,33 @@ function deleteImage(imageId) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         button.disabled = true;
 
+        // Get CSRF token from hidden input
+        const csrfInput = document.querySelector('input[name="csrf_token"]');
+        const csrfToken = csrfInput ? csrfInput.value : '<?php echo $_SESSION['csrf_token']; ?>';
+
         fetch('<?php echo APP_URL; ?>/api/delete-image', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ image_id: imageId, diary_id: <?php echo $entry['id']; ?> })
+            body: JSON.stringify({ 
+                image_id: imageId, 
+                diary_id: <?php echo $entry['id']; ?>, 
+                csrf_token: csrfToken 
+            })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 location.reload();
             } else {
-                showToast('Failed to delete image', 'error');
+                showToast('Failed to delete image: ' + (data.error || data.message || 'Unknown error'), 'error');
                 button.innerHTML = originalHTML;
                 button.disabled = false;
             }
         })
         .catch(error => {
+            console.error('Error deleting image:', error);
             showToast('Network error occurred', 'error');
             button.innerHTML = originalHTML;
             button.disabled = false;
