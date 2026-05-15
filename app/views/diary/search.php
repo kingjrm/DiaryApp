@@ -2,6 +2,8 @@
 $title = 'Search Entries';
 include __DIR__ . '/../components/header.php';
 include __DIR__ . '/../components/navbar.php';
+// Ensure $entries is an array when controller did not provide it
+$entries = $entries ?? [];
 ?>
 
 <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -22,10 +24,10 @@ include __DIR__ . '/../components/navbar.php';
                 <h2 class="text-lg font-semibold text-gray-900">
                     Search Results for "<?php echo htmlspecialchars($_GET['q']); ?>"
                 </h2>
-                <p class="text-sm text-gray-600"><?php echo count($entries); ?> entries found</p>
+                <p class="text-sm text-gray-600"><?php echo isset($entries) ? count($entries) : 0; ?> entries found</p>
             </div>
 
-            <?php if (empty($entries)): ?>
+            <?php if (empty($entries) || !is_array($entries)): ?>
                 <div class="text-center py-12">
                     <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-xl font-medium text-gray-900 mb-2">No entries found</h3>

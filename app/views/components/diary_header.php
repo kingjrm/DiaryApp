@@ -4,7 +4,7 @@ $search = $_GET['search'] ?? '';
 $mood = $_GET['mood'] ?? '';
 ?>
 
-<div class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
+<div class="fixed top-0 left-0 right-0 md:left-72 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm h-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <!-- Left side - Date selector -->
@@ -64,7 +64,7 @@ $mood = $_GET['mood'] ?? '';
                 <div class="h-4 w-px bg-gray-300"></div>
 
                 <!-- New Entry Button -->
-                <a href="<?php echo APP_URL; ?>/diary/create"
+                <a href="<?php echo url('diary/create'); ?>"
                         class="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center font-poppins text-sm shadow-sm hover:shadow-md transform hover:scale-105">
                     <i class="fas fa-plus mr-2 text-xs"></i>
                     New Entry
@@ -84,11 +84,11 @@ $mood = $_GET['mood'] ?? '';
 
                     <!-- Dropdown Menu -->
                     <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-sm border border-gray-200 py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                        <a href="<?php echo APP_URL; ?>/profile" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-poppins transition-colors duration-200">
+                        <a href="<?php echo url('profile'); ?>" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-poppins transition-colors duration-200">
                             <i class="fas fa-user mr-2"></i>Profile Settings
                         </a>
                         <div class="border-t border-gray-100 my-1"></div>
-                        <a href="<?php echo APP_URL; ?>/auth/logout" class="block px-3 py-2 text-sm text-red-600 hover:bg-red-50 font-poppins transition-colors duration-200">
+                        <a href="<?php echo url('logout'); ?>" class="block px-3 py-2 text-sm text-red-600 hover:bg-red-50 font-poppins transition-colors duration-200">
                             <i class="fas fa-sign-out-alt mr-2"></i>Logout
                         </a>
                     </div>

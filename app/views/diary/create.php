@@ -12,7 +12,7 @@ include __DIR__ . '/../components/navbar.php';
             <p class="text-sm text-gray-600 mt-1">Capture your thoughts and memories</p>
         </div>
 
-        <form id="diary-form" action="<?php echo APP_URL; ?>/diary/create" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form id="diary-form" action="<?php echo url('diary/create'); ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
             <!-- Basic Information Section -->
@@ -192,7 +192,7 @@ include __DIR__ . '/../components/navbar.php';
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-                <a href="<?php echo APP_URL; ?>/diary"
+                <a href="<?php echo url('diary'); ?>"
                    class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center font-medium">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Diary
                 </a>

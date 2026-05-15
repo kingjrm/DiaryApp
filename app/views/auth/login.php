@@ -3,57 +3,297 @@ $title = 'Login - Diary App';
 include __DIR__ . '/../components/header.php';
 ?>
 
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div class="glass rounded-xl p-8 neumorphism">
-            <div class="text-center">
-                <img src="/DiaryApp/logomydiary.png" alt="DiaryApp" style="width:84px;margin:0 auto 0.5rem;display:block;">
-                <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Welcome Back</h2>
-                <p class="text-sm text-gray-600">Sign in to your diary — your memories await</p>
+<style>
+    .auth-shell {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        padding: 5rem 1.25rem 2rem;
+        color: #fff;
+        isolation: isolate;
+    }
+
+    .auth-shell::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(6, 8, 20, 0.88), rgba(24, 18, 36, 0.72));
+        z-index: -2;
+    }
+
+    .auth-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -3;
+        filter: saturate(0.85) contrast(1.05);
+    }
+
+    .auth-grid {
+        width: min(1180px, 100%);
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .auth-brand {
+        padding: 2rem;
+        border-radius: 1.5rem;
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+        border: 1px solid rgba(255,255,255,0.12);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .brand-mark {
+        width: 96px;
+        height: auto;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .brand-title {
+        font-family: 'Pixelify Sans', cursive;
+        font-size: clamp(2.4rem, 4vw, 4.7rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        margin: 0 0 1rem;
+    }
+
+    .brand-copy {
+        max-width: 32rem;
+        color: rgba(255,255,255,0.86);
+        font-size: 1.05rem;
+    }
+
+    .feature-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+    }
+
+    .feature-pill {
+        padding: 0.6rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.09);
+        border: 1px solid rgba(255,255,255,0.13);
+        color: rgba(255,255,255,0.9);
+        font-size: 0.85rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .auth-card {
+        border-radius: 1.5rem;
+        background: rgba(255,255,255,0.88);
+        color: #111827;
+        border: 1px solid rgba(255,255,255,0.5);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+        padding: 2rem;
+    }
+
+    .auth-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .auth-heading img {
+        width: 64px;
+        height: auto;
+    }
+
+    .auth-heading h2 {
+        font-family: 'Pixelify Sans', cursive;
+        font-size: 2rem;
+        margin: 0;
+        color: #111827;
+    }
+
+    .auth-heading p {
+        color: #6b7280;
+        margin-top: 0.2rem;
+    }
+
+    .auth-form label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .auth-form input {
+        width: 100%;
+        border-radius: 0.85rem;
+        border: 1px solid #e5e7eb;
+        background: rgba(255,255,255,0.9);
+        padding: 0.9rem 1rem;
+        font-size: 0.95rem;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .auth-form input:focus {
+        outline: none;
+        border-color: #a855f7;
+        box-shadow: 0 0 0 4px rgba(168,85,247,0.14);
+    }
+
+    .auth-form .submit-btn {
+        width: 100%;
+        border: none;
+        border-radius: 0.9rem;
+        padding: 0.95rem 1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        box-shadow: 0 18px 35px rgba(124,58,237,0.25);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .auth-form .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 45px rgba(124,58,237,0.32);
+    }
+
+    .toggle-btn {
+        position: absolute;
+        right: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .auth-footer-link {
+        color: #7c3aed;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .auth-footer-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 960px) {
+        .auth-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .auth-brand {
+            display: none;
+        }
+    }
+</style>
+
+<section class="auth-shell">
+    <video class="auth-bg" autoplay muted loop playsinline>
+        <source src="<?php echo APP_URL; ?>/adventure_mydiary.mp4" type="video/mp4">
+    </video>
+
+    <div class="auth-grid">
+        <aside class="auth-brand">
+            <div>
+                <img src="<?php echo APP_URL; ?>/logomydiary.png" alt="DiaryApp" class="brand-mark">
+                <h1 class="brand-title">Your Life, Your Adventure</h1>
+                <p class="brand-copy">Sign in and continue where you left off. Capture new memories, revisit old ones, and keep your story moving.</p>
+                <div class="feature-pills">
+                    <span class="feature-pill">Private diary</span>
+                    <span class="feature-pill">Mood tracking</span>
+                    <span class="feature-pill">Secure notes</span>
+                </div>
             </div>
-            <form class="mt-8 space-y-6" action="<?php echo APP_URL; ?>/auth/login" method="POST">
+        </aside>
+
+        <div class="auth-card">
+            <div class="auth-heading">
+                <img src="<?php echo APP_URL; ?>/logomydiaryDARK.png" alt="DiaryApp">
+                <div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to your diary — your memories await</p>
+                </div>
+            </div>
+
+            <form class="auth-form space-y-5" action="<?php echo APP_URL; ?>/login.php" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <div class="space-y-4">
                     <div>
-                        <label for="email" class="block text-xs font-medium text-gray-700">Email</label>
-                        <input id="email" name="email" type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset text-xs" placeholder="Enter your email">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" required placeholder="Enter your email">
                     </div>
                     <div>
-                        <label for="password" class="block text-xs font-medium text-gray-700">Password</label>
+                        <label for="password">Password</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset text-xs" placeholder="Enter your password">
-                            <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-2 top-2 text-gray-400 hover:text-gray-600">Show</button>
+                            <input id="password" name="password" type="password" required placeholder="Enter your password">
+                            <button type="button" id="togglePassword" class="toggle-btn" aria-label="Toggle password visibility">Show</button>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <i class="fas fa-sign-in-alt"></i>
-                        </span>
-                        Sign In
-                    </button>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+                    Sign In
+                </button>
+
+                <!-- Always-visible Register CTA (placed directly under Sign In for visibility) -->
+                <div class="text-center mt-4">
+                    <a href="<?php echo url('register'); ?>" role="button" aria-label="Register now"
+                       style="display:inline-block; background:#7c3aed; color:#fff !important; padding:10px 16px; border-radius:12px; font-weight:700; text-decoration:none; box-shadow:0 12px 30px rgba(124,58,237,0.18);">
+                        Create account
+                    </a>
                 </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-600">
-                        Don't have an account?
-                        <a href="/DiaryApp/register.php" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">Sign up</a>
-                    </p>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="mb-4 p-3 rounded-md bg-red-50 border border-red-200 text-red-700">
+                        <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="mb-4 p-3 rounded-md bg-green-50 border border-green-200 text-green-700">
+                        <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <div style="padding-top:0.25rem; display:flex; align-items:center; gap:8px;">
+                    <span class="text-sm text-gray-600" style="color: #374151; display:inline-block;">Don't have an account?</span>
+                    <!-- Visible JS-driven button (no href) to avoid adblock rules targeting register links -->
+                    <button id="createAccountBtn" type="button" aria-label="Create account"
+                            style="background:#5b21b6; color:#fff; padding:6px 10px; border-radius:8px; font-weight:700; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(91,33,182,0.18);">
+                        Create account
+                    </button>
+                    <noscript style="margin-left:8px;"><a href="<?php echo url('register'); ?>" class="auth-footer-link">Register</a></noscript>
                 </div>
             </form>
         </div>
     </div>
-</div>
+</section>
 
 <script>
-document.getElementById('togglePassword')?.addEventListener('click', function(){
-    const pw = document.getElementById('password');
-    if (!pw) return;
-    if (pw.type === 'password') {
-        pw.type = 'text';
+document.getElementById('togglePassword')?.addEventListener('click', function() {
+    const password = document.getElementById('password');
+    if (!password) return;
+
+    if (password.type === 'password') {
+        password.type = 'text';
         this.textContent = 'Hide';
     } else {
-        pw.type = 'password';
+        password.type = 'password';
         this.textContent = 'Show';
     }
 });

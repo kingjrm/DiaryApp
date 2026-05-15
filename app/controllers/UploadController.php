@@ -65,18 +65,20 @@ class UploadController {
                 $filename = uniqid() . '.' . $ext;
                 $path = $uploadDir . $filename;
                 $thumbnailPath = $uploadDir . 'thumb_' . $filename;
+                $webPath = 'public/uploads/' . $filename;
+                $webThumbnailPath = 'public/uploads/thumb_' . $filename;
 
                 if (move_uploaded_file($tmpName, $path)) {
                     // Create thumbnail
                     $this->createThumbnail($path, $thumbnailPath);
-                    $imageId = $this->imageModel->create($diaryId, $filename, $originalName, $path, $thumbnailPath);
+                    $imageId = $this->imageModel->create($diaryId, $filename, $originalName, $webPath, $webThumbnailPath);
 
                     $response['images'][] = [
                         'id' => $imageId,
                         'filename' => $filename,
                         'original_name' => $originalName,
-                        'path' => $path,
-                        'thumbnail_path' => $thumbnailPath
+                        'path' => $webPath,
+                        'thumbnail_path' => $webThumbnailPath
                     ];
                 }
             }
@@ -142,11 +144,15 @@ class UploadController {
         $image = reset($image);
         
         // Delete files from filesystem
-        if (file_exists($image['path'])) {
-            unlink($image['path']);
+        $imagePath = storagePath($image['path']);
+        if ($imagePath && file_exists($imagePath)) {
+            unlink($imagePath);
         }
-        if ($image['thumbnail_path'] && file_exists($image['thumbnail_path'])) {
-            unlink($image['thumbnail_path']);
+        if (!empty($image['thumbnail_path'])) {
+            $thumbnailPath = storagePath($image['thumbnail_path']);
+            if ($thumbnailPath && file_exists($thumbnailPath)) {
+                unlink($thumbnailPath);
+            }
         }
 
         // Delete from database

@@ -10,7 +10,7 @@ include __DIR__ . '/../components/header.php';
                 <h2 class="text-xl font-bold text-gray-900 mb-2">Verify Your Account</h2>
                 <p class="text-sm text-gray-600">Enter the 6-digit code sent to your email</p>
             </div>
-            <form id="otp-form" class="mt-8 space-y-6" action="<?php echo APP_URL; ?>/auth/verify-otp" method="POST">
+            <form id="otp-form" class="mt-8 space-y-6" action="<?php echo APP_URL; ?>/verify-otp" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <div>
                     <label for="otp" class="block text-xs font-medium text-gray-700 mb-2">OTP Code</label>
@@ -38,7 +38,7 @@ include __DIR__ . '/../components/header.php';
                 <div class="text-center">
                     <p class="text-xs text-gray-600">
                         Didn't receive the code?
-                        <a href="<?php echo APP_URL; ?>/auth/resend-otp" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">Resend OTP</a>
+                        <a href="<?php echo APP_URL; ?>/resend-otp" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">Resend OTP</a>
                     </p>
                     <div id="countdown" class="text-xs text-gray-500 mt-2">Resend available in <span id="timer">60</span> seconds</div>
                 </div>

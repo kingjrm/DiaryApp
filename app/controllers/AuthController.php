@@ -42,20 +42,13 @@ class AuthController {
     }
 
     public function landing() {
-        // Show landing page if not authenticated
-        if (isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/dashboard');
-            exit;
-        }
+        // Show the public landing page for all users. Logging in should redirect to the user's dashboard.
         include __DIR__ . '/../views/landing/index.php';
+        exit;
     }
 
     public function index() {
-        if (isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/dashboard');
-        } else {
-            header('Location: ' . APP_URL . '/login');
-        }
+        header('Location: ' . url('diary/create'));
         exit;
     }
 
@@ -63,7 +56,7 @@ class AuthController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$this->userModel) {
                 $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
                 exit;
             }
             // Process registration
@@ -73,26 +66,26 @@ class AuthController {
 
             if (!$email || !$password || !$name) {
                 $_SESSION['error'] = 'All fields are required';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
                 exit;
             }
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $_SESSION['error'] = 'Invalid email format';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
                 exit;
             }
 
             if (strlen($password) < 6) {
                 $_SESSION['error'] = 'Password must be at least 6 characters';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
                 exit;
             }
 
             $existingUser = $this->userModel->findByEmail($email);
             if ($existingUser) {
                 $_SESSION['error'] = 'Email already exists';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
                 exit;
             }
 
@@ -106,22 +99,22 @@ class AuthController {
                         if ($mail->sendOTP($email, $otp)) {
                             $_SESSION['user_id'] = $user['id'];
                             $_SESSION['success'] = 'Registration successful. Please check your email for OTP.';
-                            header('Location: ' . APP_URL . '/auth/verify-otp');
+                            header('Location: ' . authPageUrl('verify-otp'));
                         } else {
                             $_SESSION['error'] = 'Failed to send OTP. Please try again.';
-                            header('Location: ' . APP_URL . '/auth/register');
+                            header('Location: ' . authPageUrl('register'));
                         }
                     } catch (Exception $e) {
                         $_SESSION['error'] = 'Failed to send OTP. Please check email configuration.';
-                        header('Location: ' . APP_URL . '/auth/register');
+                        header('Location: ' . authPageUrl('register'));
                     }
                 } else {
                     $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-                    header('Location: ' . APP_URL . '/register');
+                    header('Location: ' . authPageUrl('register'));
                 }
             } else {
                 $_SESSION['error'] = 'Registration failed';
-                header('Location: ' . APP_URL . '/register');
+                header('Location: ' . authPageUrl('register'));
             }
             exit;
         } else {
@@ -134,7 +127,7 @@ class AuthController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$this->userModel) {
                 $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-                header('Location: ' . APP_URL . '/login');
+                header('Location: ' . authPageUrl('login'));
                 exit;
             }
             // Process login
@@ -143,14 +136,14 @@ class AuthController {
 
             if (!$email || !$password) {
                 $_SESSION['error'] = 'Email and password are required';
-                header('Location: ' . APP_URL . '/login');
+                header('Location: ' . authPageUrl('login'));
                 exit;
             }
 
             $user = $this->userModel->findByEmail($email);
             if (!$user || !password_verify($password, $user['password'])) {
                 $_SESSION['error'] = 'Invalid credentials';
-                header('Location: ' . APP_URL . '/login');
+                header('Location: ' . authPageUrl('login'));
                 exit;
             }
 
@@ -169,7 +162,7 @@ class AuthController {
                 } else {
                     $_SESSION['error'] = 'Database configuration error. Please check your setup.';
                 }
-                header('Location: ' . APP_URL . '/verify-otp');
+                header('Location: ' . authPageUrl('verify-otp'));
                 exit;
             }
 
@@ -209,13 +202,13 @@ class AuthController {
 
             if (strlen($otp) !== 6 || !isset($_SESSION['user_id'])) {
                 $_SESSION['error'] = 'Please enter the complete 6-digit OTP';
-                header('Location: ' . APP_URL . '/auth/verify-otp');
+                header('Location: ' . authPageUrl('verify-otp'));
                 exit;
             }
 
             if (!$this->otpModel || !$this->userModel) {
                 $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-                header('Location: ' . APP_URL . '/auth/verify-otp');
+                header('Location: ' . authPageUrl('verify-otp'));
                 exit;
             }
 
@@ -226,27 +219,27 @@ class AuthController {
                 unset($_SESSION['user_id']);
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['success'] = 'Account verified successfully';
-                header('Location: ' . APP_URL . '/dashboard');
+                header('Location: ' . url('dashboard'));
             } else {
                 $_SESSION['error'] = 'Invalid or expired OTP';
-                header('Location: ' . APP_URL . '/auth/verify-otp');
+                header('Location: ' . authPageUrl('verify-otp'));
             }
             exit;
         } else {
             // Show OTP verification form
-            include __DIR__ . '/../views/auth/verify_otp.php';
+            include __DIR__ . '/../views/auth/verify-otp.php';
         }
     }
 
     public function logout() {
         session_destroy();
-        header('Location: ' . APP_URL . '/login');
+        header('Location: ' . authPageUrl('login'));
         exit;
     }
 
     public function profile() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
@@ -288,7 +281,7 @@ class AuthController {
 
     public function resendOTP() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
@@ -301,7 +294,7 @@ class AuthController {
         } else {
             $_SESSION['error'] = 'Failed to resend OTP';
         }
-        header('Location: ' . APP_URL . '/auth/verify-otp');
+        header('Location: ' . authPageUrl('verify-otp'));
         exit;
     }
 }

@@ -2,7 +2,7 @@
 // Variables provided by DiaryController::edit()
 if (!isset($entry)) {
     $_SESSION['error'] = 'Entry not found';
-    header('Location: ' . APP_URL . '/diary');
+    header('Location: ' . url('diary'));
     exit;
 }
 
@@ -13,6 +13,7 @@ if (!isset($images)) {
 $title = 'Edit Entry';
 include __DIR__ . '/../components/header.php';
 include __DIR__ . '/../components/diary_header.php';
+include __DIR__ . '/../components/sidebar.php';
 ?>
 
 <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -29,7 +30,7 @@ include __DIR__ . '/../components/diary_header.php';
             </div>
         </div>
 
-        <form id="diary-form" action="<?php echo APP_URL; ?>/diary/edit/<?php echo $entry['id']; ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form id="diary-form" action="<?php echo appBaseUrl(); ?>/index.php?url=/diary/edit/<?php echo $entry['id']; ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
             <!-- Basic Information Section -->
@@ -220,7 +221,7 @@ include __DIR__ . '/../components/diary_header.php';
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <?php foreach ($images as $image): ?>
                         <div class="relative group bg-white rounded-lg overflow-hidden border border-gray-200 neumorphism">
-                            <img src="<?php echo htmlspecialchars(APP_URL); ?>/<?php echo htmlspecialchars($image['thumbnail_path']); ?>"
+                            <img src="<?php echo htmlspecialchars(assetUrl($image['thumbnail_path'])); ?>"
                                  class="w-full h-32 object-cover"
                                  alt="Image thumbnail"
                                  onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2212%22 fill=%22%236b7280%22%3ENo image%3C/text%3E%3C/svg%3E';">
@@ -262,7 +263,7 @@ include __DIR__ . '/../components/diary_header.php';
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-                <a href="<?php echo APP_URL; ?>/diary"
+                <a href="<?php echo url('diary'); ?>"
                    class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center font-medium">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Diary
                 </a>
@@ -317,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('csrf_token', csrfInput.value);
         }
 
-        fetch('<?php echo APP_URL; ?>/api/autosave', {
+        fetch('<?php echo url("api/autosave"); ?>', {
             method: 'POST',
             body: formData
         }).then(response => response.json())
@@ -433,7 +434,7 @@ function deleteImage(imageId) {
         const csrfInput = document.querySelector('input[name="csrf_token"]');
         const csrfToken = csrfInput ? csrfInput.value : '<?php echo $_SESSION['csrf_token']; ?>';
 
-        fetch('<?php echo APP_URL; ?>/api/delete-image', {
+        fetch('<?php echo url("api/delete-image"); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

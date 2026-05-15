@@ -9,6 +9,7 @@ return [
     '/login' => ['controller' => 'AuthController', 'method' => 'login'],
     '/register' => ['controller' => 'AuthController', 'method' => 'register'],
     '/verify-otp' => ['controller' => 'AuthController', 'method' => 'verifyOTP'],
+    '/resend-otp' => ['controller' => 'AuthController', 'method' => 'resendOTP'],
     '/logout' => ['controller' => 'AuthController', 'method' => 'logout'],
     '/profile' => ['controller' => 'AuthController', 'method' => 'profile'],
 

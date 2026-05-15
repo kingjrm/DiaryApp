@@ -2,6 +2,10 @@
 $title = 'Calendar View';
 include __DIR__ . '/../components/header.php';
 include __DIR__ . '/../components/navbar.php';
+// Provide safe defaults if controller did not supply these variables
+$month = $month ?? ($_GET['month'] ?? date('m'));
+$year = $year ?? ($_GET['year'] ?? date('Y'));
+$entryDates = $entryDates ?? [];
 ?>
 
 <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">

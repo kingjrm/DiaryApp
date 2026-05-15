@@ -38,17 +38,19 @@ A modern, user-friendly Daily Diary Web Application built with HTML, CSS, Tailwi
    - Ensure the `public/uploads` directory is writable
 
 5. **Access the Application**:
-   - **Login:** `http://localhost/DiaryApp/public/`
-   - **Register:** `http://localhost/DiaryApp/public/register`
-   - **Dashboard:** `http://localhost/DiaryApp/public/dashboard`
-   - **Diary:** `http://localhost/DiaryApp/public/diary`
+   - **Home:** `http://localhost/DiaryApp/`
+   - **Login:** `http://localhost/DiaryApp/login.php`
+   - **Register:** `http://localhost/DiaryApp/register.php`
+   - **Diary:** `http://localhost/DiaryApp/diary`
 
 ## Project Structure
 
 ```
 DiaryApp/
-├── public/                 # Public web root
-│   ├── index.php          # Main entry point
+├── index.php              # Main entry point
+├── login.php              # Direct login entry wrapper
+├── register.php           # Direct register entry wrapper
+├── public/                # Static assets and uploads
 │   ├── assets/            # Static assets
 │   ├── js/                # JavaScript files
 │   ├── css/               # CSS files
@@ -58,6 +60,9 @@ DiaryApp/
 │   ├── models/            # Model classes
 │   └── views/             # View templates
 │       ├── auth/          # Authentication views
+│       │   ├── login.php
+│       │   ├── register.php
+│       │   └── verify-otp.php
 │       ├── diary/         # Diary views
 │       └── components/    # Reusable components
 ├── config/                # Configuration files

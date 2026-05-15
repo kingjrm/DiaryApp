@@ -21,13 +21,13 @@ class DiaryController {
 
     public function index() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
@@ -36,12 +36,16 @@ class DiaryController {
         $mood = $_GET['mood'] ?? '';
 
         $entries = $this->diaryModel->getEntriesByDateAndFilters($_SESSION['user_id'], $date, $search, $mood);
-        include __DIR__ . '/../views/diary/index.php';
+        $viewFile = __DIR__ . '/../views/diary/index.php';
+        if (!file_exists($viewFile)) {
+            $viewFile = __DIR__ . '/../views/diary/diary.php';
+        }
+        include $viewFile;
     }
 
     public function create() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
@@ -56,7 +60,7 @@ class DiaryController {
     private function store() {
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/diary/create');
+            header('Location: ' . url('diary/create'));
             exit;
         }
 
@@ -76,7 +80,7 @@ class DiaryController {
 
         if (!$title || !$content || !$date) {
             $_SESSION['error'] = 'Title, content, and date are required';
-            header('Location: ' . APP_URL . '/diary/create?date=' . $date);
+            header('Location: ' . url('diary/create') . '?date=' . $date);
             exit;
         }
 
@@ -90,7 +94,7 @@ class DiaryController {
 
         if (!$entryId) {
             $_SESSION['error'] = 'Failed to create entry';
-            header('Location: ' . APP_URL . '/diary/create?date=' . $date);
+            header('Location: ' . url('diary/create') . '?date=' . $date);
             exit;
         }
 
@@ -124,26 +128,26 @@ class DiaryController {
         if (!isset($_SESSION['success'])) {
             $_SESSION['success'] = 'Entry created successfully';
         }
-        header('Location: ' . APP_URL . '/diary');
+        header('Location: ' . url('diary'));
         exit;
     }
 
     public function edit($id) {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
@@ -177,7 +181,7 @@ class DiaryController {
 
         if (!$title || !$content) {
             $_SESSION['error'] = 'Title and content are required';
-            header('Location: ' . APP_URL . '/diary/edit/' . $id);
+            header('Location: ' . url('diary/edit/' . $id));
             exit;
         }
 
@@ -198,35 +202,42 @@ class DiaryController {
         if (!isset($_SESSION['success'])) {
             $_SESSION['success'] = 'Entry updated successfully';
         }
-        header('Location: ' . APP_URL . '/diary');
+        header('Location: ' . url('diary'));
         exit;
     }
 
     public function delete($id) {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
         // Delete images
         $images = $this->imageModel ? $this->imageModel->getByDiaryId($id) : [];
         foreach ($images as $image) {
-            unlink($image['path']);
-            if ($image['thumbnail_path']) {
-                unlink($image['thumbnail_path']);
+            $imagePath = storagePath($image['path']);
+            if ($imagePath && file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+            if (!empty($image['thumbnail_path'])) {
+                $thumbnailPath = storagePath($image['thumbnail_path']);
+                if ($thumbnailPath && file_exists($thumbnailPath)) {
+                    unlink($thumbnailPath);
+                }
             }
         }
         if ($this->imageModel) {
@@ -235,26 +246,26 @@ class DiaryController {
 
         $this->diaryModel->delete($id, $_SESSION['user_id']);
         $_SESSION['success'] = 'Entry deleted successfully';
-        header('Location: ' . APP_URL . '/diary');
+        header('Location: ' . url('diary'));
         exit;
     }
 
     public function view($id) {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
         $entry = $this->diaryModel->findById($id, $_SESSION['user_id']);
         if (!$entry) {
             $_SESSION['error'] = 'Entry not found';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
@@ -264,13 +275,13 @@ class DiaryController {
 
     public function search() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
         if (!$this->diaryModel) {
             $_SESSION['error'] = 'Database configuration error. Please check your setup.';
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('diary'));
             exit;
         }
 
@@ -285,7 +296,7 @@ class DiaryController {
 
     public function calendar() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
 
@@ -340,9 +351,9 @@ class DiaryController {
             $path = $uploadDir . $filename;
             $thumbnailPath = $uploadDir . 'thumb_' . $filename;
             
-            // Store relative web path for database (without 'public/' since APP_URL already includes it)
-            $webPath = 'uploads/' . $filename;
-            $webThumbnailPath = 'uploads/thumb_' . $filename;
+            // Store relative public path so both old and new records can resolve cleanly.
+            $webPath = 'public/uploads/' . $filename;
+            $webThumbnailPath = 'public/uploads/thumb_' . $filename;
 
             if (move_uploaded_file($tmpName, $path)) {
                 // Create thumbnail

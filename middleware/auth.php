@@ -10,7 +10,7 @@ class AuthMiddleware {
     public static function requireAuth() {
         if (!isset($_SESSION['user_id'])) {
             $_SESSION['error'] = 'Please log in first';
-            header('Location: ' . APP_URL . '/login');
+            header('Location: ' . authPageUrl('login'));
             exit;
         }
         return true;
@@ -21,7 +21,7 @@ class AuthMiddleware {
      */
     public static function requireGuest() {
         if (isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/diary');
+            header('Location: ' . url('dashboard'));
             exit;
         }
         return true;

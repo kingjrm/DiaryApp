@@ -1,59 +1,40 @@
 # URL Structure Guide
 
-## With `index.php` in URL (Default Configuration)
+## Clean URLs with direct auth pages
 
-This is the configuration you've chosen. All URLs include `index.php` with query parameters:
+This is the configuration you're using now. Auth pages are direct `.php` wrappers, while the rest of the app is routed from the root entry point:
 
 ```
-http://localhost/DiaryApp/index.php                          → Landing page
-http://localhost/DiaryApp/index.php?url=/login               → Login page
-http://localhost/DiaryApp/index.php?url=/register            → Register page
-http://localhost/DiaryApp/index.php?url=/diary               → Diary home
-http://localhost/DiaryApp/index.php?url=/diary/create        → Create entry
-http://localhost/DiaryApp/index.php?url=/diary/view/5        → View entry #5
-http://localhost/DiaryApp/index.php?url=/diary/edit/5        → Edit entry #5
-http://localhost/DiaryApp/index.php?url=/diary/search        → Search entries
-http://localhost/DiaryApp/index.php?url=/api/autosave        → Auto-save API
+http://localhost/DiaryApp/                 → Landing page
+http://localhost/DiaryApp/login.php        → Login page
+http://localhost/DiaryApp/register.php     → Register page
+http://localhost/DiaryApp/verify-otp.php    → OTP verification page
+http://localhost/DiaryApp/diary             → Diary home
+http://localhost/DiaryApp/diary/create     → Create entry
+http://localhost/DiaryApp/diary/view/5     → View entry #5
+http://localhost/DiaryApp/diary/edit/5     → Edit entry #5
+http://localhost/DiaryApp/diary/search     → Search entries
+http://localhost/DiaryApp/api/autosave     → Auto-save API
 ```
 
 ## Configuration
 
 Your `.env` file is set to:
 ```env
-APP_URL=http://localhost/DiaryApp/index.php
-```
-
-## Optional: Clean URLs (requires .htaccess)
-
-If you want to remove `index.php` from URLs, you can:
-
-1. Ensure Apache `mod_rewrite` is enabled
-2. Enable the rewrite rules in `.htaccess`
-3. Change `.env` to:
-```env
 APP_URL=http://localhost/DiaryApp
-```
-
-Then URLs become:
-```
-http://localhost/DiaryApp/login
-http://localhost/DiaryApp/diary
-http://localhost/DiaryApp/diary/view/5
 ```
 
 ## How It Works
 
-The system automatically detects the URL format and routes accordingly:
+The app now uses two URL styles:
 
-1. **With Query Parameter** (your current setup)
-   - URL: `index.php?url=/login`
-   - Router reads: `$_GET['url']` parameter
-   - Works everywhere, no `.htaccess` needed ✅
+1. **Direct auth pages**
+   - URL: `login.php`, `register.php`, `verify-otp.php`
+   - These wrappers include the matching views directly.
 
-2. **With Rewrite Rules** (if you enable .htaccess)
-   - URL: `index.php/login` or `/login`
-   - Router reads: `REQUEST_URI`
-   - Cleaner, requires `.htaccess` setup
+2. **Router-driven app pages**
+   - URL: `/diary`, `/diary/create`, `/api/autosave`
+   - The root `index.php` and `url()` helper keep these functional.
 
 ## Using the `url()` Helper
 
@@ -73,11 +54,11 @@ Controllers use the same logic:
 
 ```php
 // In controllers
-header('Location: ' . APP_URL . '/login');
-// This works correctly with query parameters
+header('Location: ' . authPageUrl('login'));
+// This redirects to login.php
 ```
 
 ---
 
-**Your current setup**: `index.php` is visible in URLs with query parameters  
-**Alternative setup**: Clean URLs (requires `.htaccess` and server configuration)
+**Your current setup**: clean base URL with direct auth pages  
+**App pages**: still routed through the root `index.php`
