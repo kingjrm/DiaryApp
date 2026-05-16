@@ -251,13 +251,7 @@ include __DIR__ . '/../components/header.php';
                     Sign In
                 </button>
 
-                <!-- Always-visible Register CTA (placed directly under Sign In for visibility) -->
-                <div class="text-center mt-4">
-                    <a href="<?php echo url('register'); ?>" role="button" aria-label="Register now"
-                       style="display:inline-block; background:#7c3aed; color:#fff !important; padding:10px 16px; border-radius:12px; font-weight:700; text-decoration:none; box-shadow:0 12px 30px rgba(124,58,237,0.18);">
-                        Create account
-                    </a>
-                </div>
+
 
                 <?php if (isset($_SESSION['error'])): ?>
                     <div class="mb-4 p-3 rounded-md bg-red-50 border border-red-200 text-red-700">
@@ -270,14 +264,12 @@ include __DIR__ . '/../components/header.php';
                     </div>
                 <?php endif; ?>
 
-                <div style="padding-top:0.25rem; display:flex; align-items:center; gap:8px;">
-                    <span class="text-sm text-gray-600" style="color: #374151; display:inline-block;">Don't have an account?</span>
-                    <!-- Visible JS-driven button (no href) to avoid adblock rules targeting register links -->
-                    <button id="createAccountBtn" type="button" aria-label="Create account"
-                            style="background:#5b21b6; color:#fff; padding:6px 10px; border-radius:8px; font-weight:700; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(91,33,182,0.18);">
-                        Create account
-                    </button>
-                    <noscript style="margin-left:8px;"><a href="<?php echo url('register'); ?>" class="auth-footer-link">Register</a></noscript>
+                <div style="margin-top:1.5rem; display:flex; align-items:center; justify-content:center; gap:12px;">
+                    <span style="font-size:0.875rem; color:#4b5563; font-weight:500;">Don't have an account?</span>
+                    <a href="<?php echo APP_URL; ?>/register.php" 
+                       style="background:linear-gradient(135deg, #7c3aed, #ec4899); color:#fff; padding:8px 16px; border-radius:8px; font-size:0.875rem; font-weight:700; text-decoration:none; box-shadow:0 4px 14px rgba(124,58,237,0.25); display:inline-block; transition:all 0.2s;">
+                        Register now
+                    </a>
                 </div>
             </form>
         </div>

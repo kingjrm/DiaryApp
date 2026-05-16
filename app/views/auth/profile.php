@@ -2,10 +2,12 @@
 $title = 'Profile Settings';
 include __DIR__ . '/../components/header.php';
 include __DIR__ . '/../components/diary_header.php';
+include __DIR__ . '/../components/sidebar.php';
 ?>
 
-<div class="min-h-screen bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+<div class="pt-16 pb-8 min-h-screen bg-gray-50">
+    <div class="md:ml-72">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Header -->
         <div class="mb-8">
@@ -14,7 +16,7 @@ include __DIR__ . '/../components/diary_header.php';
                     <h1 class="text-2xl font-bold text-gray-900 font-poppins">Profile Settings</h1>
                     <p class="text-gray-600 font-poppins text-sm mt-1">Customize your diary experience</p>
                 </div>
-                <a href="<?php echo APP_URL; ?>/diary"
+                <a href="<?php echo url('diary'); ?>"
                    class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-all duration-200 font-poppins text-sm shadow-sm hover:shadow-md">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Diary
                 </a>
@@ -191,6 +193,7 @@ include __DIR__ . '/../components/diary_header.php';
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 

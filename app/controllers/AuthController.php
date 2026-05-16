@@ -248,30 +248,46 @@ class AuthController {
         $userPreferences = $preferencesModel->getPreferences($_SESSION['user_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
-            $bio = trim($_POST['bio'] ?? '');
-            $writingFont = $_POST['writing_font'] ?? 'Poppins';
-            $scrapbookTheme = $_POST['scrapbook_theme'] ?? 'classic';
-            $timezone = $_POST['timezone'] ?? 'UTC';
-            $dateFormat = $_POST['date_format'] ?? 'Y-m-d';
-
-            // Update user name
-            if (!empty($name)) {
-                $this->userModel->updateProfile($_SESSION['user_id'], $name);
-                $_SESSION['user_name'] = $name;
+            $user = $this->userModel->findById($_SESSION['user_id']);
+            
+            // Check which form was submitted by checking the presence of fields
+            if (isset($_POST['name'])) {
+                // Profile info form
+                $name = trim($_POST['name']);
+                $bio = trim($_POST['bio'] ?? '');
+                
+                if (!empty($name)) {
+                    $this->userModel->updateProfile($_SESSION['user_id'], $name);
+                    $_SESSION['user_name'] = $name;
+                }
+                
+                // Only update bio, keep other preferences intact
+                $preferencesModel->updatePreferences($_SESSION['user_id'], [
+                    'writing_font' => $userPreferences['writing_font'] ?? 'Poppins',
+                    'scrapbook_theme' => $userPreferences['scrapbook_theme'] ?? 'classic',
+                    'bio' => $bio,
+                    'timezone' => $userPreferences['timezone'] ?? 'UTC',
+                    'date_format' => $userPreferences['date_format'] ?? 'Y-m-d'
+                ]);
+            } elseif (isset($_POST['writing_font'])) {
+                // Writing preferences form
+                $writingFont = $_POST['writing_font'] ?? 'Poppins';
+                $scrapbookTheme = $_POST['scrapbook_theme'] ?? 'classic';
+                $timezone = $_POST['timezone'] ?? 'UTC';
+                $dateFormat = $_POST['date_format'] ?? 'Y-m-d';
+                
+                // Update preferences, keep bio intact
+                $preferencesModel->updatePreferences($_SESSION['user_id'], [
+                    'writing_font' => $writingFont,
+                    'scrapbook_theme' => $scrapbookTheme,
+                    'bio' => $userPreferences['bio'] ?? '',
+                    'timezone' => $timezone,
+                    'date_format' => $dateFormat
+                ]);
             }
 
-            // Update preferences
-            $preferencesModel->updatePreferences($_SESSION['user_id'], [
-                'writing_font' => $writingFont,
-                'scrapbook_theme' => $scrapbookTheme,
-                'bio' => $bio,
-                'timezone' => $timezone,
-                'date_format' => $dateFormat
-            ]);
-
             $_SESSION['success'] = 'Profile updated successfully!';
-            header('Location: ' . APP_URL . '/profile');
+            header('Location: ' . url('profile'));
             exit;
         }
 

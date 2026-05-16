@@ -3,146 +3,149 @@ $title = 'Verify OTP - Diary App';
 include __DIR__ . '/../components/header.php';
 ?>
 
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div class="glass rounded-xl p-8 neumorphism">
-            <div class="text-center">
-                <h2 class="text-xl font-bold text-gray-900 mb-2">Verify Your Account</h2>
-                <p class="text-sm text-gray-600">Enter the 6-digit code sent to your email</p>
-            </div>
-            <form id="otp-form" class="mt-8 space-y-6" action="<?php echo APP_URL; ?>/verify-otp" method="POST">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <div>
-                    <label for="otp" class="block text-xs font-medium text-gray-700 mb-2">OTP Code</label>
-                    <div class="flex space-x-2 mb-4">
-                        <input id="otp1" name="otp1" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                        <input id="otp2" name="otp2" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                        <input id="otp3" name="otp3" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                        <input id="otp4" name="otp4" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                        <input id="otp5" name="otp5" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                        <input id="otp6" name="otp6" type="text" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 neumorphism-inset" required>
-                    </div>
-                    <div class="text-center mb-4">
-                        <span class="text-sm text-gray-500">Entered: <span id="otp-display" class="font-mono font-bold text-gray-700">------</span></span>
-                    </div>
-                    <input type="hidden" id="otp" name="otp">
-                </div>
-                <div>
-                    <button type="submit" id="verify-btn" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105">
-                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <i class="fas fa-check"></i>
-                        </span>
-                        Verify Account
-                    </button>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-600">
-                        Didn't receive the code?
-                        <a href="<?php echo APP_URL; ?>/resend-otp" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">Resend OTP</a>
-                    </p>
-                    <div id="countdown" class="text-xs text-gray-500 mt-2">Resend available in <span id="timer">60</span> seconds</div>
-                </div>
-            </form>
+<style>
+    .auth-shell {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1.25rem;
+        color: #fff;
+        isolation: isolate;
+    }
+    .auth-shell::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(6, 8, 20, 0.88), rgba(24, 18, 36, 0.72));
+        z-index: -2;
+    }
+    .auth-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -3;
+        filter: saturate(0.85) contrast(1.05);
+    }
+    .auth-card {
+        border-radius: 1.5rem;
+        background: rgba(255,255,255,0.88);
+        color: #111827;
+        border: 1px solid rgba(255,255,255,0.5);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 440px;
+        text-align: center;
+    }
+    .auth-heading h2 {
+        font-family: 'Pixelify Sans', cursive;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #111827;
+    }
+    .auth-heading p {
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+    .otp-input {
+        width: 3.2rem;
+        height: 3.8rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        border-radius: 0.85rem;
+        border: 1px solid #e5e7eb;
+        background: rgba(255,255,255,0.9);
+        color: #111827;
+        transition: all 0.2s ease;
+    }
+    .otp-input:focus {
+        outline: none;
+        border-color: #a855f7;
+        box-shadow: 0 0 0 4px rgba(168,85,247,0.14);
+        transform: translateY(-2px);
+    }
+    .submit-btn {
+        width: 100%;
+        border: none;
+        border-radius: 0.9rem;
+        padding: 1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        box-shadow: 0 18px 35px rgba(124,58,237,0.25);
+        transition: all 0.2s ease;
+        margin-top: 1.5rem;
+        cursor: pointer;
+    }
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 45px rgba(124,58,237,0.32);
+    }
+    .submit-btn.verified {
+        background: linear-gradient(135deg, #059669, #10b981);
+        box-shadow: 0 18px 35px rgba(16,185,129,0.25);
+    }
+    .auth-footer-link {
+        color: #7c3aed;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .auth-footer-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<section class="auth-shell">
+    <video class="auth-bg" autoplay muted loop playsinline>
+        <source src="<?php echo APP_URL; ?>/adventure_mydiary.mp4" type="video/mp4">
+    </video>
+
+    <div class="auth-card">
+        <div class="auth-heading">
+            <img src="<?php echo APP_URL; ?>/logomydiaryDARK.png" alt="DiaryApp" style="width: 64px; margin: 0 auto 1rem;">
+            <h2>Verify Your Account</h2>
+            <p>Enter the 6-digit code sent to your email</p>
         </div>
+
+        <form id="otp-form" action="<?php echo APP_URL; ?>/verify-otp.php" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
+            <div class="flex justify-center space-x-2 mb-6">
+                <input id="otp1" name="otp1" type="text" maxlength="1" class="otp-input" required>
+                <input id="otp2" name="otp2" type="text" maxlength="1" class="otp-input" required>
+                <input id="otp3" name="otp3" type="text" maxlength="1" class="otp-input" required>
+                <input id="otp4" name="otp4" type="text" maxlength="1" class="otp-input" required>
+                <input id="otp5" name="otp5" type="text" maxlength="1" class="otp-input" required>
+                <input id="otp6" name="otp6" type="text" maxlength="1" class="otp-input" required>
+            </div>
+            
+            <div class="text-center mb-4">
+                <span class="text-sm text-gray-500 font-medium">Entered: <span id="otp-display" class="font-mono font-bold text-gray-700 tracking-widest">------</span></span>
+            </div>
+            <input type="hidden" id="otp" name="otp">
+            
+            <button type="submit" id="verify-btn" class="submit-btn flex items-center justify-center">
+                <i class="fas fa-check mr-2"></i> <span class="ml-2">Verify Account</span>
+            </button>
+            
+            <div class="text-center mt-6">
+                <p class="text-sm text-gray-600 font-medium">
+                    Didn't receive the code?
+                    <a href="<?php echo APP_URL; ?>/resend-otp" class="auth-footer-link">Resend OTP</a>
+                </p>
+                <div id="countdown" class="text-xs text-gray-500 mt-2 font-medium">Resend available in <span id="timer" class="font-bold">60</span>s</div>
+            </div>
+        </form>
     </div>
-</div>
+</section>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const otpInputs = document.querySelectorAll('input[id^="otp"]');
-    const verifyBtn = document.getElementById('verify-btn');
-    const countdownEl = document.getElementById('countdown');
-    const timerEl = document.getElementById('timer');
-
-    // Focus on first input
-    if (otpInputs.length > 0) {
-        otpInputs[0].focus();
-    }
-
-    // Simple OTP input handling
-    otpInputs.forEach((input, index) => {
-        input.addEventListener('input', function() {
-            // Only allow numbers
-            this.value = this.value.replace(/[^0-9]/g, '');
-
-            // Move to next input if a digit was entered
-            if (this.value.length === 1 && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
-            }
-
-            updateDisplay();
-        });
-
-        input.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && this.value === '' && index > 0) {
-                otpInputs[index - 1].focus();
-            }
-        });
-
-        // Handle paste - distribute across all inputs
-        input.addEventListener('paste', function(e) {
-            e.preventDefault();
-            const paste = (e.clipboardData || window.clipboardData).getData('text');
-            const digits = paste.replace(/[^0-9]/g, '').substring(0, 6).split('');
-
-            digits.forEach((digit, i) => {
-                if (otpInputs[i]) {
-                    otpInputs[i].value = digit;
-                }
-            });
-
-            updateDisplay();
-
-            // Focus on last input or next empty one
-            const lastInput = otpInputs[digits.length - 1] || otpInputs[5];
-            lastInput.focus();
-        });
-    });
-
-    function updateDisplay() {
-        const otp = Array.from(otpInputs).map(input => input.value).join('');
-        const display = document.getElementById('otp-display');
-        display.textContent = otp.padEnd(6, '-');
-
-        // Visual feedback
-        if (otp.length === 6) {
-            verifyBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-            verifyBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-        } else {
-            verifyBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-            verifyBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-        }
-    }
-
-    // Countdown timer
-    let timeLeft = 60;
-    const countdown = setInterval(() => {
-        timerEl.textContent = timeLeft;
-        timeLeft--;
-        if (timeLeft < 0) {
-            clearInterval(countdown);
-            countdownEl.style.display = 'none';
-        }
-    }, 1000);
-
-    // Form submission
-    document.getElementById('otp-form').addEventListener('submit', function(e) {
-        const otp = Array.from(otpInputs).map(input => input.value).join('');
-
-        if (otp.length !== 6) {
-            e.preventDefault();
-            alert('Please enter the complete 6-digit OTP');
-            return false;
-        }
-
-        // Set the hidden otp field
-        document.getElementById('otp').value = otp;
-
-        // Disable the button to prevent double submission
-        verifyBtn.disabled = true;
-        verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-    });
-});
-</script>
+<script src="<?php echo APP_URL; ?>/public/js/verify_otp.js"></script>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>

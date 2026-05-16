@@ -210,7 +210,7 @@ include __DIR__ . '/../components/header.php';
                 </div>
             </div>
 
-            <form class="auth-form space-y-5" action="<?php echo APP_URL; ?>/register" method="POST">
+            <form class="auth-form space-y-5" action="<?php echo APP_URL; ?>/register.php" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <div class="space-y-4">
                     <div>

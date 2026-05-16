@@ -36,27 +36,4 @@ $fonts = [
     <input type="hidden" id="selected-font" name="font_family" value="<?php echo htmlspecialchars($selectedFont); ?>">
 </div>
 
-<script>
-function selectFont(fontClass) {
-    // Remove selected class from all options
-    document.querySelectorAll('.font-option').forEach(option => {
-        option.classList.remove('border-pink-400', 'bg-pink-50');
-        option.classList.add('border-gray-200');
-    });
-
-    // Add selected class to clicked option
-    event.currentTarget.classList.remove('border-gray-200');
-    event.currentTarget.classList.add('border-pink-400', 'bg-pink-50');
-
-    // Update hidden input
-    document.getElementById('selected-font').value = fontClass;
-
-    // Update textarea font
-    const textarea = document.getElementById('content');
-    textarea.className = textarea.className.replace(/font-\w+/g, '');
-    textarea.classList.add(fontClass);
-
-    // Show preview
-    showToast(`Font changed to ${event.currentTarget.querySelector('.font-name').textContent}`, 'success');
-}
-</script>
+<script src="<?php echo APP_URL; ?>/public/js/font_picker.js"></script>
